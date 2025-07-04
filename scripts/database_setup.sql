@@ -1,6 +1,7 @@
 -- Create database
 CREATE DATABASE IF NOT EXISTS redeem_codes_db;
-USE redeem_codes_db;
+-- USE redeem_codes_db;
+USE defaultdb;
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (

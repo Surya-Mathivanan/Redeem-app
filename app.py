@@ -8,21 +8,21 @@ app = Flask(__name__)
 app.secret_key = 'your-secret-key-change-this'
 
 # Database configuration using environment variables
-# DB_CONFIG = {
-#     'host': 'localhost',
-#     'user': 'root',
-#     'password': 'Surya2003@@',
-#     'database': 'redeem_codes_db'
-# }
 DB_CONFIG = {
-  'host': os.getenv('DB_HOST'),
-  'user': os.getenv('DB_USER'),
-  'password': os.getenv('DB_PASSWORD'),
-  'database': os.getenv('DB_NAME'),
-  'port': int(os.getenv('DB_PORT', 3306)),
-  'ssl_disabled': False
-  
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'Surya2003@@',
+    'database': 'redeem_codes_db'
 }
+# DB_CONFIG = {
+#   'host': os.getenv('DB_HOST'),
+#   'user': os.getenv('DB_USER'),
+#   'password': os.getenv('DB_PASSWORD'),
+#   'database': os.getenv('DB_NAME'),
+#   'port': int(os.getenv('DB_PORT', 3306)),
+#   'ssl_disabled': False
+  
+# }
 
 
 

@@ -8,7 +8,9 @@
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 sidebar p-0">
             <div class="p-4">
-                <h4 class="mb-4"><i class="fas fa-gift me-2"></i>Redeem Manager</h4>
+                <h4 style="margin-bottom: 20px;">
+                <i class="fas fa-gift" style="margin-left: 65px; color: #000000; font-size: 24px;"></i>
+                </h4>
                 <nav class="nav flex-column">
                     <a class="nav-link active" href="{{ url_for('home') }}">
                         <i class="fas fa-home me-2"></i>Home
@@ -53,7 +55,7 @@
             <!-- Anti-Misuse Warning -->
             <div class="alert alert-warning alert-dismissible fade show">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>Anti-Misuse System Active:</strong> Our AI monitors copying patterns. Rapid copying (multiple codes within 20 seconds) will result in automatic account suspension.
+                <strong>Anti-Misuse System Active:</strong> Our AI monitors copying patterns. Rapid copying will result in automatic account suspension.
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             
@@ -61,36 +63,47 @@
                 <div class="row">
                     {% for code in redeem_codes %}
                         <div class="col-md-6 col-lg-4 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title text-primary">{{ code[1] }}</h5>
-                                    <div class="code-display mb-3">
-                                        {{ code[2] }}
-                                    </div>
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            <i class="fas fa-user me-1"></i>Added by: {{ code[4] }}<br>
-                                            <i class="fas fa-calendar me-1"></i>Date: {{ code[3].strftime('%Y-%m-%d %H:%M') }}
-                                        </small>
-                                    </p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-info">
-                                            <i class="fas fa-copy me-1"></i>Copies: <span id="copy-count-{{ code[0] }}">{{ code[5] }}</span>
-                                        </span>
-                                        <button class="btn btn-copy btn-sm copy-btn" 
-                                                data-code-id="{{ code[0] }}" 
-                                                data-code="{{ code[2] }}"
-                                                {% if code[6] %}disabled{% endif %}>
-                                            {% if code[6] %}
-                                                <i class="fas fa-check me-1"></i>Copied
-                                            {% else %}
-                                                <i class="fas fa-copy me-1"></i>Copy Code
-                                            {% endif %}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="card h-100">
+        <div class="card-body">
+            <h5 class="card-title text-primary">{{ code[1] }}</h5>
+            
+            <!-- Modified code display with blur overlay -->
+            <div class="position-relative">
+                <div class="code-display mb-3 blurred" id="code-display-{{ code[0] }}">
+                    {{ code[2] }}
+                </div>
+                <div class="blur-overlay" id="blur-overlay-{{ code[0] }}">
+                    <small class="text-muted">
+                        <i class="fas fa-eye-slash me-1"></i>
+                        Click copy to reveal code
+                    </small>
+                </div>
+            </div>
+            
+            <p class="card-text">
+                <small class="text-muted">
+                    <i class="fas fa-user me-1"></i>Added by: {{ code[4] }}<br>
+                    <i class="fas fa-calendar me-1"></i>Date: {{ code[3].strftime('%Y-%m-%d %H:%M') }}
+                </small>
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-info">
+                    <i class="fas fa-copy me-1"></i>Copies: <span id="copy-count-{{ code[0] }}">{{ code[5] }}</span>
+                </span>
+                <button class="btn btn-copy btn-sm copy-btn"
+                         data-code-id="{{ code[0] }}"
+                         data-code="{{ code[2] }}"
+                        {% if code[6] %}disabled{% endif %}>
+                    {% if code[6] %}
+                        <i class="fas fa-check me-1"></i>Copied
+                    {% else %}
+                        <i class="fas fa-copy me-1"></i>Copy Code
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
                     {% endfor %}
                 </div>
             {% else %}
@@ -108,6 +121,7 @@
 </div>
 {% endblock %}
 
+
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -122,6 +136,17 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const codeId = this.dataset.codeId;
             const code = this.dataset.code;
+            
+            // Remove blur effect immediately when copy button is clicked
+            const codeDisplay = document.getElementById(`code-display-${codeId}`);
+            const blurOverlay = document.getElementById(`blur-overlay-${codeId}`);
+            
+            if (codeDisplay && codeDisplay.classList.contains('blurred')) {
+                codeDisplay.classList.remove('blurred');
+                if (blurOverlay) {
+                    blurOverlay.style.display = 'none';
+                }
+            }
             
             // Copy to clipboard
             navigator.clipboard.writeText(code).then(() => {
@@ -166,37 +191,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                         
                         // Show success message
-                        const alert = document.createElement('div');
-                        alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
-                        alert.style.top = '20px';
-                        alert.style.right = '20px';
-                        alert.style.zIndex = '9999';
-                        alert.innerHTML = `
-                            Code copied to clipboard!
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        `;
-                        document.body.appendChild(alert);
+                        showAlert('success', 'Code copied to clipboard!');
                         
-                        // Auto remove alert after 3 seconds
-                        setTimeout(() => {
-                            if (alert.parentNode) {
-                                alert.parentNode.removeChild(alert);
-                            }
-                        }, 3000);
                     } else if (data.suspended) {
                         // Handle suspension
-                        const alert = document.createElement('div');
-                        alert.className = 'alert alert-danger alert-dismissible fade show position-fixed';
-                        alert.style.top = '20px';
-                        alert.style.right = '20px';
-                        alert.style.zIndex = '9999';
-                        alert.style.maxWidth = '400px';
-                        alert.innerHTML = `
-                            <strong>Account Suspended!</strong><br>
-                            ${data.message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        `;
-                        document.body.appendChild(alert);
+                        showAlert('danger', `<strong>Account Suspended!</strong><br>${data.message}`);
                         
                         // Redirect to login after 5 seconds
                         setTimeout(() => {
@@ -204,31 +203,42 @@ document.addEventListener('DOMContentLoaded', function() {
                         }, 5000);
                     } else {
                         // Show error message
-                        const alert = document.createElement('div');
-                        alert.className = 'alert alert-danger alert-dismissible fade show position-fixed';
-                        alert.style.top = '20px';
-                        alert.style.right = '20px';
-                        alert.style.zIndex = '9999';
-                        alert.innerHTML = `
-                            ${data.message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        `;
-                        document.body.appendChild(alert);
-                        
-                        // Auto remove alert after 3 seconds
-                        setTimeout(() => {
-                            if (alert.parentNode) {
-                                alert.parentNode.removeChild(alert);
-                            }
-                        }, 3000);
+                        showAlert('danger', data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    showAlert('danger', 'An error occurred while copying the code.');
                 });
+            }).catch(err => {
+                console.error('Failed to copy code:', err);
+                showAlert('danger', 'Failed to copy code to clipboard.');
             });
         });
     });
+    
+    // Helper function to show alerts
+    function showAlert(type, message) {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alert.style.top = '20px';
+        alert.style.right = '20px';
+        alert.style.zIndex = '9999';
+        alert.style.maxWidth = '400px';
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alert);
+        
+        // Auto remove alert after 3 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+            }
+        }, 3000);
+    }
 });
 </script>
 {% endblock %}
+

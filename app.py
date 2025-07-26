@@ -13,10 +13,10 @@ except ImportError:
     pass
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-change-this-in-production')
+app.secret_key = os.getenv("SECRET_KEY")
 
 # MongoDB configuration
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb+srv://kit26ad59:ld40fTki6Q0BDjXG@cluster0.ge3lxlk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+MONGO_URI = os.getenv("MONGO_URI")
 DATABASE_NAME = 'redeem_codes_db'
 
 def get_db_connection():

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
-import CodeCard from '../components/CodeCard';
 import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const Archive = () => {
   const [archivedCodes, setArchivedCodes] = useState([]);
@@ -14,11 +13,7 @@ const Archive = () => {
   useEffect(() => {
     const fetchArchivedCodes = async () => {
       try {
-        // Replace
-  
-        
-        // With
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/codes/archive`);
+        const res = await api.get('/codes/archive');
         setArchivedCodes(res.data);
         setLoading(false);
       } catch (error) {
@@ -33,7 +28,7 @@ const Archive = () => {
 
   const handleUnarchive = async (id) => {
     try {
-      await axios.put(`/api/codes/${id}/unarchive`);
+      await api.put(`/codes/${id}/unarchive`);
       setArchivedCodes(archivedCodes.filter(code => code._id !== id));
       toast.success('Code unarchived successfully');
     } catch (error) {

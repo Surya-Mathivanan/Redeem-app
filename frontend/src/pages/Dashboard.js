@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -10,12 +10,13 @@ const Dashboard = () => {
     addedCodes: 0
   });
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  // We might need user data in the future
+  useAuth(); // Keep the auth context without extracting unused variables
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('/api/codes/stats');
+        const res = await api.get('/codes/stats');
         setStats(res.data);
         setLoading(false);
       } catch (error) {

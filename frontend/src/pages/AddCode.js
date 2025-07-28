@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const AddCode = () => {
   const [formData, setFormData] = useState({
@@ -32,7 +32,7 @@ const AddCode = () => {
     
     setLoading(true);
     try {
-      await axios.post('/api/codes', formData);
+      await api.post('/codes', formData);
       toast.success('Redeem code added successfully!');
       navigate('/');
     } catch (error) {

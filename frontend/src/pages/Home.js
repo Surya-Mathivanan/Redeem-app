@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import Layout from '../components/Layout';
 import CodeCard from '../components/CodeCard';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ const Home = () => {
   useEffect(() => {
     const fetchCodes = async () => {
       try {
-        const res = await axios.get('/api/codes');
+        const res = await api.get('/codes');
         setCodes(res.data);
         setLoading(false);
       } catch (error) {

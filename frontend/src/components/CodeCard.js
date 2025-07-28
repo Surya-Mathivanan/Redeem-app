@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -30,7 +30,7 @@ const CodeCard = ({ code, onCopySuccess }) => {
       }
 
       // Call API to record the copy
-      const response = await axios.post(`/api/codes/${code._id}/copy`);
+      const response = await api.post(`/codes/${code._id}/copy`);
       
       // Copy to clipboard
       navigator.clipboard.writeText(code.code);

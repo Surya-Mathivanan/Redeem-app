@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const AuthContext = createContext();
 
@@ -17,18 +17,16 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         
         if (token) {
-          // Set auth token header
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          // Token is handled by api interceptor
           
           // Verify token and get user data
-          const res = await axios.get('/api/auth/me');
+          const res = await api.get('/auth/me');
           
           setUser(res.data);
         }
       } catch (error) {
         // If token is invalid, remove it
         localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
       } finally {
         setLoading(false);
       }
@@ -40,11 +38,10 @@ export const AuthProvider = ({ children }) => {
   // Register user
   const register = async (userData) => {
     try {
-      const res = await axios.post('/api/auth/register', userData);
+      const res = await api.post('/auth/register', userData);
       
-      // Save token and set auth header
+      // Save token
       localStorage.setItem('token', res.data.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
       
       setUser(res.data);
       toast.success('Registration successful!');
@@ -59,11 +56,10 @@ export const AuthProvider = ({ children }) => {
   // Login user
   const login = async (userData) => {
     try {
-      const res = await axios.post('/api/auth/login', userData);
+      const res = await api.post('/auth/login', userData);
       
-      // Save token and set auth header
+      // Save token
       localStorage.setItem('token', res.data.token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
       
       setUser(res.data);
       toast.success('Login successful!');
@@ -78,7 +74,6 @@ export const AuthProvider = ({ children }) => {
   // Logout user
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
     setUser(null);
     toast.info('Logged out successfully');
   };
@@ -86,7 +81,7 @@ export const AuthProvider = ({ children }) => {
   // Update user profile
   const updateProfile = async (userData) => {
     try {
-      const res = await axios.put('/api/users/profile', userData);
+      const res = await api.put('/users/profile', userData);
       
       setUser({
         ...user,
@@ -105,7 +100,7 @@ export const AuthProvider = ({ children }) => {
   // Check suspension status
   const checkSuspension = async () => {
     try {
-      const res = await axios.get('/api/users/suspension');
+      const res = await api.get('/users/suspension');
       
       if (res.data.isSuspended) {
         toast.error(`Your account is suspended until ${new Date(res.data.suspendedUntil).toLocaleString()}. Reason: ${res.data.reason}`);

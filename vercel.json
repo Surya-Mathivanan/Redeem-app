@@ -15,6 +15,10 @@
       "dest": "https://redeem-app-backend.onrender.com/api/$1"
     },
     {
+      "src": "/auth/(.*)",
+      "dest": "https://redeem-app-backend.onrender.com/api/auth/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "frontend/build/$1"
     }

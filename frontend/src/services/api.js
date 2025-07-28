@@ -5,6 +5,12 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || ''
 });
 
+// Override baseURL if we're in production and deployed to Vercel
+if (process.env.NODE_ENV === 'production' && window.location.hostname !== 'localhost') {
+  // Use relative URLs which will be handled by Vercel's routing
+  api.defaults.baseURL = '';
+}
+
 // Add request interceptor to set auth token
 api.interceptors.request.use(
   (config) => {

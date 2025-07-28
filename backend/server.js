@@ -16,7 +16,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://redeem-app-6xhh.vercel.app', 'https://redeem-app-backend.onrender.com', 'https://redeem-app-mwd4.vercel.app'],
+  origin: ['http://localhost:3000', 'https://redeem-app-6xhh.vercel.app', 'https://redeem-app-backend.onrender.com', 'https://redeem-app-mwd4.vercel.app', 'https://redeem-app-5.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']

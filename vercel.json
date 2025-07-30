@@ -7,6 +7,10 @@
       "config": {
         "distDir": "build"
       }
+    },
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -18,7 +22,7 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
-      "dest": "https://redeem-app-5.onrender.com/api/$1"
+      "dest": "backend/server.js"
     },
     {
       "src": "/auth/(.*)",
@@ -28,7 +32,7 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
-      "dest": "https://redeem-app-5.onrender.com/api/auth/$1"
+      "dest": "backend/server.js"
     },
     {
       "src": "/(.*)",

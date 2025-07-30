@@ -1,14 +1,12 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "",
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000",
 });
 
-if (
-  process.env.NODE_ENV === "production" &&
-  window.location.hostname !== "localhost"
-) {
-  api.defaults.baseURL = "https://redeem-app-5.onrender.com";
+// Remove hardcoded URL and use environment variable
+if (process.env.NODE_ENV === "production") {
+  api.defaults.baseURL = process.env.REACT_APP_API_URL;
 }
 
 api.interceptors.request.use(

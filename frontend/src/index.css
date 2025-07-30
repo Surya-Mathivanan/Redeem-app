@@ -3,6 +3,155 @@
 * {
   box-sizing: border-box;
 }
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #306396;
+}
+
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid #e1e4e8;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.sidebar-content {
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-nav {
+  flex: 1;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  text-decoration: none;
+  color: #ffffff;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.sidebar-nav-item:hover {
+  background-color: rgb(249, 197, 19);
+  color: rgb(248, 81, 73);
+}
+
+.sidebar-nav-item.active {
+  background-color: rgb(14, 18, 88);
+  color: #fdfeff;
+  font-weight: 600;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  margin-top: auto;
+  color: #d73a49;
+}
+
+.logout-btn:hover {
+  background-color: #ffeaea;
+  color: #d73a49;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding-top: 0;
+}
+
+.content-wrapper {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+
+  z-index: 999;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    /* Added padding-top to ensure content starts after the mobile header */
+    padding-top: 60px; /* Assuming a mobile header height of around 60px */
+  }
+
+  .content-wrapper {
+    padding: 1rem;
+  }
+}
+
+/* Trendy Color Titles */
+.trendy-title-red {
+  color: #ff6b6b !important;
+  font-weight: 700;
+}
+
+.trendy-title-yellow {
+  color: #ffd93d !important;
+  font-weight: 700;
+}
+
+/* Enhanced card styling */
+.github-card {
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  transition: all 0.2s ease;
+}
+
+.github-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
 
 html {
   scroll-behavior: smooth;
@@ -577,8 +726,8 @@ a:hover {
 
 /* Button Variants */
 .btn-primary, .copy-btn {
-  background: linear-gradient(135deg, #4a90e2, #357abd);
-  border-color: #4a90e2;
+  background: rgb(9, 11, 44);
+  border-color: #72abec;
   color: white;
   box-shadow: 0 4px 8px rgba(74, 144, 226, 0.2);
 }
@@ -750,7 +899,7 @@ a:hover {
   color: #8b949e;
 }
 
-/* Enhanced Cards */
+/* Enhanced Cards (general .card remains the same) */
 .card {
   position: relative;
   display: flex;
@@ -833,6 +982,92 @@ a:hover {
 
 .card-footer:last-child {
   border-radius: 0 0 7px 7px;
+}
+
+/* Styles for the SPECIFIC Redeem Code Card */
+/* These styles are applied ONLY to elements with the class 'redeem-code-card' */
+.redeem-code-card {
+  display: block;
+  position: relative;
+  max-width: 300px; /* Adjust as needed based on your layout */
+  max-height: 320px; /* Adjust as needed */
+  background-color: #f2f8f9; /* Original background */
+  border-radius: 10px;
+  padding: 2em 1.2em;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #c3e6ec, #a7d1d9); /* Original gradient */
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: none; /* Override any general .card box-shadow */
+  transition: all 0.3s ease-out; /* Smooth transition for overall card */
+}
+
+.redeem-code-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: linear-gradient(135deg, #364a60, #384c6c);
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.35s ease-out;
+  opacity: 1; /* Ensure this is always visible for the new effect */
+}
+
+.redeem-code-card:hover::before {
+  transform: scale(28);
+}
+
+.redeem-code-card .card-title {
+  color: #262626; /* Original color from the provided snippet */
+  font-size: 1.5em;
+  line-height: normal;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+.redeem-code-card .small-desc {
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5em;
+  color: #452c2c; /* Original color from the provided snippet */
+}
+
+.redeem-code-card .go-corner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  background: linear-gradient(135deg, #6293c8, #384c6c);
+  border-radius: 0 4px 0 32px;
+}
+
+.redeem-code-card .go-arrow {
+  margin-top: -4px;
+  margin-right: -4px;
+  color: white;
+  font-family: courier, sans;
+}
+
+.redeem-code-card:hover .small-desc {
+  transition: all 0.5s ease-out;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.redeem-code-card:hover .card-title {
+  transition: all 0.5s ease-out;
+  color: #ffffff;
 }
 
 /* Alerts */
@@ -1104,56 +1339,58 @@ a:hover {
   .sidebar {
     transform: translateX(-100%);
   }
-  
+
   .sidebar.show {
     transform: translateX(0);
   }
-  
+
   .sidebar-overlay.show {
     display: block;
   }
-  
+
   .sidebar-toggle {
     display: block;
   }
-  
+
   .main-content {
     margin-left: 0;
     padding: 1rem;
+    /* Ensure padding-top is sufficient for the fixed mobile header */
+    padding-top: 60px; /* Adjust this value if your actual header height is different */
   }
-  
+
   .page-title {
     font-size: 2rem;
   }
-  
+
   .codes-grid .row {
     margin: 0;
   }
-  
+
   .codes-grid .row > * {
     padding: 0.5rem;
   }
-  
+
   .code-card {
     padding: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .code-meta {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .btn-lg {
     padding: 0.75rem 1.5rem;
     font-size: 0.875rem;
   }
-  
+
   .auth-form {
     padding: 1.5rem;
     margin: 1rem;
   }
-  
+
   .card-body {
     padding: 1rem;
   }
@@ -1162,67 +1399,69 @@ a:hover {
 @media (max-width: 575.98px) {
   .main-content {
     padding: 0.75rem;
+    /* Ensure padding-top is sufficient for the fixed mobile header */
+    padding-top: 60px; /* Adjust this value if your actual header height is different */
   }
-  
+
   .page-title {
     font-size: 1.75rem;
   }
-  
+
   .page-header .d-flex {
     flex-direction: column;
     align-items: stretch !important;
     gap: 1rem;
   }
-  
+
   .btn-lg {
     width: 100%;
     justify-content: center;
   }
-  
+
   .code-card {
     padding: 0.75rem;
   }
-  
+
   .code-display {
     padding: 0.75rem;
     font-size: 0.75rem;
   }
-  
+
   .copy-btn {
     padding: 0.75rem;
   }
-  
+
   .auth-form {
     padding: 1rem;
     margin: 0.5rem;
   }
-  
+
   .form-control {
     padding: 0.5rem 0.75rem;
   }
-  
+
   .container {
     padding-right: 0.5rem;
     padding-left: 0.5rem;
   }
-  
+
   .alert {
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .card-body {
     padding: 0.75rem;
   }
-  
+
   .empty-state-content {
     padding: 0 1rem;
   }
-  
+
   .empty-state-icon {
     font-size: 2rem;
   }
-  
+
   .empty-state-title {
     font-size: 1.25rem;
   }
@@ -1275,4 +1514,136 @@ a:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+
+.form-container {
+  width: 100%; /* Make it responsive */
+  background: linear-gradient(#212121, #212121) padding-box,
+              linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
+  border: 2px solid transparent;
+  padding: 32px 24px;
+  font-size: 14px;
+  font-family: inherit;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-container button:active {
+  scale: 0.95;
+}
+
+.form-container .form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-container .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form-container .form-group-label {
+  display: block;
+  margin-bottom: 5px;
+  color: #717171;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.form-container .form-group-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  background-color: transparent;
+  border: 1px solid #414141;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.form-container .form-group-input::placeholder {
+  opacity: 0.5;
+}
+
+.form-container .form-group-input:focus {
+  outline: none;
+  border-color: #e81cff;
+}
+
+.form-container .form-submit-btn {
+  display: flex;
+  align-items: center; /* Center content vertically */
+  justify-content: center;
+  font-family: inherit;
+  color: #fff; /* Changed to white for better contrast */
+  font-weight: 600;
+  width: 100%; /* Make button full width */
+  background: linear-gradient(145deg, #e81cff, #40c9ff); /* Gradient background for button */
+  border: none; /* No border for the gradient button */
+  padding: 12px 16px;
+  font-size: inherit;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.form-container .form-submit-btn:hover {
+  background: linear-gradient(145deg, #40c9ff, #e81cff); /* Invert gradient on hover */
+  box-shadow: 0 0 10px rgba(232, 28, 255, 0.5); /* Add glow effect on hover */
+}
+
+.text-centered {
+  text-align: center;
+}
+
+.margin-bottom-large {
+  margin-bottom: 24px;
+}
+
+.margin-end-small {
+  margin-right: 8px;
+}
+
+.margin-bottom-medium {
+  margin-bottom: 16px;
+}
+
+.width-full {
+  width: 100%;
+}
+
+.margin-top-medium {
+  margin-top: 16px;
+}
+
+.margin-top-large {
+  margin-top: 24px;
+}
+
+.text-muted-style {
+  color: #aaa;
+  font-size: 0.85em;
+}
+
+.alert-message {
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+}
+
+.alert-danger-style {
+  background-color: #ff4d4d;
+  color: white;
+  border: 1px solid #cc0000;
 }

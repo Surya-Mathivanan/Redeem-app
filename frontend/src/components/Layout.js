@@ -116,13 +116,13 @@ const Layout = ({ children }) => {
 
       {/* Custom Styles */}
       <style jsx>{`
-        .app-container {
+        .appp-container {
           display: flex;
           min-height: 100vh;
           background-color: #f6f8fa;
         }
 
-        .mobile-header {
+        .mobilep-header {
           position: fixed;
           top: 0;
           left: 0;
@@ -131,7 +131,7 @@ const Layout = ({ children }) => {
           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .sidebar {
+        .sidebarp {
           width: 280px;
           background-color: #ffffff;
           border-right: 1px solid #e1e4e8;
@@ -144,18 +144,18 @@ const Layout = ({ children }) => {
           overflow-y: auto;
         }
 
-        .sidebar-content {
+        .sidebar-contentp {
           padding: 2rem;
           height: 100%;
           display: flex;
           flex-direction: column;
         }
 
-        .sidebar-nav {
+        .sidebar-navp {
           flex: 1;
         }
 
-        .sidebar-nav-item {
+        .sidebar-nav-itemp {
           display: flex;
           align-items: center;
           padding: 0.75rem 1rem;
@@ -168,18 +168,18 @@ const Layout = ({ children }) => {
           font-weight: 500;
         }
 
-        .sidebar-nav-item:hover {
+        .sidebarp-nav-item:hover {
           background-color: #f1f3f4;
           color: #0366d6;
         }
 
-        .sidebar-nav-item.active {
+        .sidebarp-nav-item.active {
           background-color: #e3f2fd;
           color: #0366d6;
           font-weight: 600;
         }
 
-        .logout-btn {
+        .logoutp-btn {
           background: none;
           border: none;
           cursor: pointer;
@@ -189,24 +189,24 @@ const Layout = ({ children }) => {
           color: #d73a49;
         }
 
-        .logout-btn:hover {
+        .logoutp-btn:hover {
           background-color: #ffeaea;
           color: #d73a49;
         }
 
-        .main-content {
+        .mainp-content {
           flex: 1;
           margin-left: 280px;
           padding-top: 0;
         }
 
-        .content-wrapper {
+        .contentp-wrapper {
           padding: 2rem;
           max-width: 1200px;
           margin: 0 auto;
         }
 
-        .mobile-overlay {
+        .mobilep-overlay {
           position: fixed;
           top: 0;
           left: 0;
@@ -216,7 +216,7 @@ const Layout = ({ children }) => {
           z-index: 999;
         }
 
-        /* Mobile Responsive */
+        /* Mobilep Responsive */
         @media (max-width: 768px) {
           .sidebar {
             transform: translateX(-100%);
@@ -224,33 +224,33 @@ const Layout = ({ children }) => {
             max-width: 320px;
           }
 
-          .sidebar.mobile-open {
+          .sidebarp.mobile-open {
             transform: translateX(0);
           }
 
-          .main-content {
+          .mainp-content {
             margin-left: 0;
             padding-top: 60px;
           }
 
-          .content-wrapper {
+          .contentp-wrapper {
             padding: 1rem;
           }
         }
 
-        /* Trendy Color Titles */
-        .trendy-title-red {
+        /* Trendyp Color Titles */
+        .trendyp-title-red {
           color: #ff6b6b !important;
           font-weight: 700;
         }
 
-        .trendy-title-yellow {
+        .trendyp-title-yellow {
           color: #ffd93d !important;
           font-weight: 700;
         }
 
         /* Enhanced card styling */
-        .github-card {
+        .github-cardp {
           background: white;
           border: 1px solid #e1e4e8;
           border-radius: 8px;
@@ -258,7 +258,7 @@ const Layout = ({ children }) => {
           transition: all 0.2s ease;
         }
 
-        .github-card:hover {
+        .github-card:hoverp {
           box-shadow: 0 4px 8px rgba(0,0,0,0.12);
           transform: translateY(-1px);
         }

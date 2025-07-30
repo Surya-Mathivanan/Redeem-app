@@ -7,7 +7,9 @@ import {
   faCalendar,
   faCopy,
   faCheck,
-  faEyeSlash
+  faEyeSlash,
+  faGift,
+  faClock
 } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../context/AuthContext';
 
@@ -22,28 +24,22 @@ const CodeCard = ({ code, onCopySuccess }) => {
     try {
       setIsCopying(true);
       
-      // Check if user is suspended before proceeding
       const isSuspended = await checkSuspension();
       if (isSuspended) {
         setIsCopying(false);
         return;
       }
 
-      // Call API to record the copy
       const response = await api.post(`/codes/${code._id}/copy`);
       
-      // Copy to clipboard
       navigator.clipboard.writeText(code.code);
       
-      // Update state
       setIsBlurred(false);
       setHasCopied(true);
       setCopyCount(response.data.copyCount);
       
-      // Notify success
       toast.success('Code copied to clipboard!');
       
-      // Call parent callback if provided
       if (onCopySuccess) {
         onCopySuccess(code._id);
       }
@@ -55,59 +51,80 @@ const CodeCard = ({ code, onCopySuccess }) => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  };
+
   return (
-    <div className="uiverse-card-responsive h-100">
-      <div className="card-body">
-        <h5 className="card-title text-primary">{code.title}</h5>
-        
-        {/* Code display with blur overlay */}
-        <div className="position-relative">
-          <div className={`code-display mb-3 ${isBlurred ? 'blurred' : ''}`}>
+    <div className="code-card-inner">
+      <div className="code-card-header">
+        <div className="d-flex align-items-center">
+          <FontAwesomeIcon icon={faGift} className="code-icon me-2" />
+          <h5 className="code-title">{code.title}</h5>
+        </div>
+        <span className="copy-badge">
+          <FontAwesomeIcon icon={faCopy} className="me-1" />
+          {copyCount}
+        </span>
+      </div>
+      
+      <div className="code-content">
+        <div className="code-display-container">
+          <div className={`code-display ${isBlurred ? 'blurred' : ''}`}>
             {code.code}
           </div>
           {isBlurred && (
-            <div className="blur-overlay">
-              <small className="text-muted">
-                <FontAwesomeIcon icon={faEyeSlash} className="me-1" />
-                Click copy to reveal code
-              </small>
+            <div className="code-overlay">
+              <div className="overlay-content">
+                <FontAwesomeIcon icon={faEyeSlash} className="overlay-icon" />
+                <span>Click copy to reveal</span>
+              </div>
             </div>
           )}
         </div>
         
-        <p className="card-text">
-          <small className="text-muted">
-            <FontAwesomeIcon icon={faUser} className="me-1" />
-            Added by: {code.user.name}<br />
-            <FontAwesomeIcon icon={faCalendar} className="me-1" />
-            Date: {new Date(code.createdAt).toLocaleString()}
-          </small>
-        </p>
-        <div className="d-flex justify-content-between align-items-center">
-          <span className="badge bg-info">
-            <FontAwesomeIcon icon={faCopy} className="me-1" />
-            Copies: {copyCount}
-          </span>
-          <button
-            className="btn btn-copy btn-sm"
-            onClick={handleCopy}
-            disabled={hasCopied || isCopying}
-          >
-            {isCopying ? (
-              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-            ) : hasCopied ? (
-              <>
-                <FontAwesomeIcon icon={faCheck} className="me-1" />
-                Copied
-              </>
-            ) : (
-              <>
-                <FontAwesomeIcon icon={faCopy} className="me-1" />
-                Copy
-              </>
-            )}
-          </button>
+        <div className="code-meta">
+          <div className="meta-item">
+            <FontAwesomeIcon icon={faUser} className="meta-icon" />
+            <span className="meta-text">{code.user.name}</span>
+          </div>
+          <div className="meta-item">
+            <FontAwesomeIcon icon={faClock} className="meta-icon" />
+            <span className="meta-text">{formatDate(code.createdAt)}</span>
+          </div>
         </div>
+      </div>
+      
+      <div className="code-card-footer">
+        <button
+          className={`copy-btn ${hasCopied ? 'copied' : ''} ${isCopying ? 'loading' : ''}`}
+          onClick={handleCopy}
+          disabled={hasCopied || isCopying}
+        >
+          {isCopying ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Copying...
+            </>
+          ) : hasCopied ? (
+            <>
+              <FontAwesomeIcon icon={faCheck} className="me-2" />
+              Copied!
+            </>
+          ) : (
+            <>
+              <FontAwesomeIcon icon={faCopy} className="me-2" />
+              Copy Code
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

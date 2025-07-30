@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 const Home = () => {
   const [codes, setCodes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
 
   useEffect(() => {
     const fetchCodes = async () => {
@@ -27,40 +26,68 @@ const Home = () => {
     fetchCodes();
   }, []);
 
+  const handleCodeUpdate = (updatedCodeId) => {
+    setCodes(prevCodes => 
+      prevCodes.map(code => 
+        code._id === updatedCodeId ? { ...code, hasCopied: true } : code
+      )
+    );
+  };
+
   return (
     <Layout>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Available Redeem Codes</h2>
-        <Link to="/add-code" className="btn btn-primary">
-          <i className="fas fa-plus me-2"></i>Add New Code
-        </Link>
-      </div>
-
-      {loading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-3">Loading redeem codes...</p>
-        </div>
-      ) : codes.length > 0 ? (
-        <div className="row">
-          {codes.map((code) => (
-            <div className="col-md-6 col-lg-4 mb-4" key={code._id}>
-              <CodeCard code={code} />
+      <div className="home-container">
+        <div className="page-header">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h1 className="page-title">
+                <span className="title-accent-red">Available</span>{' '}
+                <span className="title-accent-yellow">Redeem Codes</span>
+              </h1>
+              <p className="page-subtitle">Discover and redeem exclusive codes</p>
             </div>
-          ))}
+            <Link to="/add-code" className="btn btn-primary btn-lg">
+              <i className="fas fa-plus me-2"></i>Add New Code
+            </Link>
+          </div>
         </div>
-      ) : (
-        <div className="text-center py-5">
-          <i className="fas fa-gift fa-5x text-muted mb-3"></i>
-          <h4 className="text-muted">No redeem codes available</h4>
-          <p className="text-muted">Be the first to add a redeem code!</p>
-          <Link to="/add-code" className="btn btn-primary">
-            <i className="fas fa-plus me-2"></i>Add Redeem Code
-          </Link>
-        </div>
-      )}
+
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+              <p className="loading-text">Loading redeem codes...</p>
+            </div>
+          </div>
+        ) : codes.length > 0 ? (
+          <div className="codes-grid">
+            <div className="row g-4">
+              {codes.map((code) => (
+                <div className="col-md-6 col-lg-4" key={code._id}>
+                  <div className="code-card">
+                    <CodeCard code={code} onCopySuccess={handleCodeUpdate} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="empty-state">
+            <div className="empty-state-content">
+              <i className="fas fa-gift empty-state-icon"></i>
+              <h3 className="empty-state-title">No redeem codes available</h3>
+              <p className="empty-state-description">
+                Be the first to share a redeem code with the community!
+              </p>
+              <Link to="/add-code" className="btn btn-primary btn-lg">
+                <i className="fas fa-plus me-2"></i>Add Redeem Code
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
     </Layout>
   );
 };

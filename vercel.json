@@ -18,7 +18,7 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
-      "dest": "https://redeem-app-backend-v1.onrender.com/api/$1"
+      "dest": "https://redeem-app-backend-v2.onrender.com/api/$1"
     },
     {
       "src": "/auth/(.*)",
@@ -28,7 +28,7 @@
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type, Authorization"
       },
-      "dest": "https://redeem-app-backend-v1.onrender.com/auth/$1"
+      "dest": "https://redeem-app-backend-v2.onrender.com/auth/$1"
     },
     {
       "src": "/(.*)",

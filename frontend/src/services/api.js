@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000",
 });
 
-// Remove hardcoded URL and use environment variable
+// Remove hardcoded URL and use environment variable only
 if (process.env.NODE_ENV === "production") {
   api.defaults.baseURL = process.env.REACT_APP_API_URL;
 }

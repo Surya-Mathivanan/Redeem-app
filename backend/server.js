@@ -14,13 +14,42 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// Middleware
+// ✅ CORRECT CORS CONFIGURATION - Single source of truth
+const allowedOrigins = [
+  'http://localhost:3000',           // Local development
+  'http://localhost:5000',           // Local backend
+  'https://redeem-app-backend-v2.onrender.com', // Backend
+  'https://redeem-app-frontend-v2.onrender.com'  // Frontend after deployment
+];
+
+// Proper CORS middleware setup
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://redeem-app-backend-v1.onrender.com'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Handle pre-flight requests properly
+app.options('*', cors());
+
+// Remove the conflicting manual CORS headers
+// ❌ DELETE THESE LINES:
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//   ...
+// });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -66,7 +95,6 @@ if (process.env.NODE_ENV === 'production') {
 // Error handler middleware
 app.use(errorHandler);
 
-// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

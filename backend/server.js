@@ -16,6 +16,7 @@ const app = express();
 
 // ✅ LOCAL CORS CONFIGURATION
 const allowedOrigins = [
+  'http://localhost:3000',                    // Local development
   'https://redeem-appp.vercel.app',           // Frontend
   'https://redeem-appp.onrender.com',           // Backend
 ];

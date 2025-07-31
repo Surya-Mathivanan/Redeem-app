@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://redeem-appp.onrender.com",
+  baseURL: "https://redeem-appp.onrender.com/api",
 });
 
 // Remove the production check since we're running locally

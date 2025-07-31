@@ -21,4 +21,4 @@ services:
     staticPublishPath: ./frontend/build
     envVars:
       - key: REACT_APP_API_URL
-        value: http://localhost:5000
+        value: https://redeem-appp.onrender.com

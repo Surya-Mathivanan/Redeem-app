@@ -51,11 +51,25 @@ const loginUser = asyncHandler(async (req, res) => {
   // Check for user email
   const user = await User.findOne({ email }).select('+password');
 
-  if (user && (await user.matchPassword(password))) {
+  if (user) {
+    if (!(await user.matchPassword(password))) {
+      res.status(401);
+      throw new Error('Wrong password');
+    }
+    
     // Check if user is suspended
     if (user.isSuspended && user.suspendedUntil > new Date()) {
+      const suspensionDate = new Date(user.suspendedUntil);
+      const formattedDate = suspensionDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
       res.status(403);
-      throw new Error(`Your account is suspended until ${user.suspendedUntil.toLocaleString()}`);
+      throw new Error(`Your account is suspended until ${formattedDate}`);
     }
 
     res.json({

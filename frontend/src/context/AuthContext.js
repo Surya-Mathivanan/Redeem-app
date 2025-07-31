@@ -103,7 +103,16 @@ export const AuthProvider = ({ children }) => {
       const res = await api.get('/users/suspension');
       
       if (res.data.isSuspended) {
-        toast.error(`Your account is suspended until ${new Date(res.data.suspendedUntil).toLocaleString()}. Reason: ${res.data.reason}`);
+        const suspensionDate = new Date(res.data.suspendedUntil);
+        const formattedDate = suspensionDate.toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+        toast.error(`Your account is suspended until ${formattedDate}. Reason: ${res.data.reason}`);
         return true;
       }
       

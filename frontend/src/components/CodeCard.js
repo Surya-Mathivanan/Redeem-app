@@ -54,10 +54,16 @@ const CodeCard = ({ code, onCopySuccess }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = now - date;
+    const diffSeconds = Math.floor(diffTime / 1000);
+    const diffMinutes = Math.floor(diffTime / (1000 * 60));
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 1) return 'Yesterday';
+    if (diffSeconds < 60) return 'just now';
+    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+    if (diffDays === 1) return 'yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
     return date.toLocaleDateString();
   };

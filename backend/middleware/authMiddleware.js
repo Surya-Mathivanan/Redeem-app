@@ -28,8 +28,17 @@ const protect = asyncHandler(async (req, res, next) => {
 
       // Check if user is suspended
       if (req.user.isSuspended && req.user.suspendedUntil > new Date()) {
+        const suspensionDate = new Date(req.user.suspendedUntil);
+        const formattedDate = suspensionDate.toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
         res.status(403);
-        throw new Error(`Your account is suspended until ${req.user.suspendedUntil.toLocaleString()}`);
+        throw new Error(`Your account is suspended until ${formattedDate}`);
       }
 
       next();
@@ -103,8 +112,16 @@ const checkRapidCopying = asyncHandler(async (req, res, next) => {
         isActive: true
       });
       
+      const formattedDate = suspendedUntil.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
       res.status(403);
-      throw new Error(`Your account has been suspended for 30 minutes due to rapid copying pattern. Please try again after ${suspendedUntil.toLocaleString()}.`);
+      throw new Error(`Your account has been suspended for 30 minutes due to rapid copying pattern. Please try again after ${formattedDate}.`);
     }
   }
   

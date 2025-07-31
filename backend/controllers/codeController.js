@@ -7,15 +7,16 @@ const { checkRapidCopying } = require('../middleware/authMiddleware');
 // @route   GET /api/codes
 // @access  Private
 const getCodes = asyncHandler(async (req, res) => {
-  const codes = await RedeemCode.find({ isArchived: false })
+  const codes = await RedeemCode.find({
+    isArchived: false,
+    copyCount: { $lte: 4 }
+  })
     .populate('user', 'name')
-    .sort({ createdAt: -1 });
+    .sort({ copyCount: 1 });
 
-  // Get copy information for the current user
   const userCopies = await Copy.find({ user: req.user._id }).select('redeemCode');
   const userCopiedCodeIds = userCopies.map(copy => copy.redeemCode.toString());
 
-  // Format the response
   const formattedCodes = codes.map(code => {
     return {
       _id: code._id,
@@ -38,9 +39,9 @@ const getCodes = asyncHandler(async (req, res) => {
 // @route   GET /api/codes/archive
 // @access  Private
 const getArchivedCodes = asyncHandler(async (req, res) => {
-  const codes = await RedeemCode.find({ 
+  const codes = await RedeemCode.find({
     user: req.user._id,
-    isArchived: true 
+    isArchived: true
   }).sort({ createdAt: -1 });
 
   res.status(200).json(codes);
@@ -85,7 +86,6 @@ const updateCode = asyncHandler(async (req, res) => {
     throw new Error('Code not found');
   }
 
-  // Check if user is authorized to update
   if (code.user.toString() !== req.user._id.toString()) {
     res.status(401);
     throw new Error('Not authorized to update this code');
@@ -111,7 +111,6 @@ const archiveCode = asyncHandler(async (req, res) => {
     throw new Error('Code not found');
   }
 
-  // Check if user is authorized to archive
   if (code.user.toString() !== req.user._id.toString()) {
     res.status(401);
     throw new Error('Not authorized to archive this code');
@@ -134,7 +133,6 @@ const unarchiveCode = asyncHandler(async (req, res) => {
     throw new Error('Code not found');
   }
 
-  // Check if user is authorized to unarchive
   if (code.user.toString() !== req.user._id.toString()) {
     res.status(401);
     throw new Error('Not authorized to unarchive this code');
@@ -157,7 +155,6 @@ const deleteCode = asyncHandler(async (req, res) => {
     throw new Error('Code not found');
   }
 
-  // Check if user is authorized to delete
   if (code.user.toString() !== req.user._id.toString()) {
     res.status(401);
     throw new Error('Not authorized to delete this code');
@@ -172,7 +169,6 @@ const deleteCode = asyncHandler(async (req, res) => {
 // @route   POST /api/codes/:id/copy
 // @access  Private
 const copyCode = asyncHandler(async (req, res) => {
-  // First check for rapid copying pattern
   await checkRapidCopying(req, res, async () => {
     const code = await RedeemCode.findById(req.params.id);
 
@@ -181,7 +177,6 @@ const copyCode = asyncHandler(async (req, res) => {
       throw new Error('Code not found');
     }
 
-    // Check if user has already copied this code
     const existingCopy = await Copy.findOne({
       user: req.user._id,
       redeemCode: code._id,
@@ -192,14 +187,18 @@ const copyCode = asyncHandler(async (req, res) => {
       throw new Error('You have already copied this code');
     }
 
-    // Create copy record
     await Copy.create({
       user: req.user._id,
       redeemCode: code._id,
     });
 
-    // Increment copy count
     code.copyCount += 1;
+
+    // ✅ Archive the code if it reaches 5 copies
+    if (code.copyCount >= 5) {
+      code.isArchived = true;
+    }
+
     await code.save();
 
     res.status(200).json({
@@ -214,10 +213,7 @@ const copyCode = asyncHandler(async (req, res) => {
 // @route   GET /api/codes/stats
 // @access  Private
 const getStats = asyncHandler(async (req, res) => {
-  // Get total codes added by user
   const addedCodes = await RedeemCode.countDocuments({ user: req.user._id });
-
-  // Get total copies by user
   const totalCopies = await Copy.countDocuments({ user: req.user._id });
 
   res.status(200).json({

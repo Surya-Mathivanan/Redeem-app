@@ -10,7 +10,7 @@
 
 ---
 ## Live URL:
-* [Redeem App](https://redeem-appp.vercel.app/)
+* [Redeem App](https://redeem-appp.vercel.app/) : https://redeem-appp.vercel.app/
 
 ---
 ## Interface
@@ -20,14 +20,14 @@
 
 <img width="1366" height="765" alt="Image" src="https://github.com/user-attachments/assets/45136185-89c6-4474-94d2-3731ac5977c2" />
 
-<img width="1366" height="765" alt="Image" src="https://github.com/user-attachments/assets/a58afbe5-8c5c-4def-bcff-7bc51f2cb73b" />
 
 <img width="1347" height="763" alt="Image" src="https://github.com/user-attachments/assets/a7921a01-e962-4def-a5bc-f168d24651d0" />
 
-<img width="1366" height="764" alt="Image" src="https://github.com/user-attachments/assets/779de292-fffc-444f-a2d5-33687bcec663" />
 
 <img width="1366" height="767" alt="Image" src="https://github.com/user-attachments/assets/718bcced-eccf-4c9a-bc07-79f82d3d3524" />
 
+<img width="1366" height="764" alt="Image" src="https://github.com/user-attachments/assets/779de292-fffc-444f-a2d5-33687bcec663" />
+<img width="1366" height="765" alt="Image" src="https://github.com/user-attachments/assets/a58afbe5-8c5c-4def-bcff-7bc51f2cb73b" />
 
 
 

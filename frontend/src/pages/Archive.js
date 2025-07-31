@@ -15,10 +15,10 @@ const Archive = () => {
       try {
         const res = await api.get('/codes/archive');
         setArchivedCodes(res.data);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching archived codes:', error);
         toast.error('Failed to load archived codes');
+      } finally {
         setLoading(false);
       }
     };
@@ -29,7 +29,7 @@ const Archive = () => {
   const handleUnarchive = async (id) => {
     try {
       await api.put(`/codes/${id}/unarchive`);
-      setArchivedCodes(archivedCodes.filter(code => code._id !== id));
+      setArchivedCodes((prev) => prev.filter((code) => code._id !== id));
       toast.success('Code unarchived successfully');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to unarchive code');
@@ -42,12 +42,12 @@ const Archive = () => {
         <h2>Archived Codes</h2>
         <span className="badge bg-secondary fs-6">{archivedCodes.length} Archived Codes</span>
       </div>
-      
+
       <div className="alert alert-info">
         <i className="fas fa-info-circle me-2"></i>
-        This page shows codes that are no longer active - either expired (older than 7 days) or exhausted (more than 5 copies).
+        This page shows codes that are no longer active – either expired (older than 7 days) or exhausted (5 or more copies).
       </div>
-      
+
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status">
@@ -63,13 +63,9 @@ const Archive = () => {
                 <div className="card-body">
                   <div className="d-flex justify-content-between align-items-start mb-2">
                     <h5 className="card-title text-muted">{code.title}</h5>
-                    <span className="badge bg-secondary">
-                      Archived
-                    </span>
+                    <span className="badge bg-secondary">Archived</span>
                   </div>
-                  <div className="code-display mb-3 p-2 bg-light rounded">
-                    {code.code}
-                  </div>
+                  <div className="code-display mb-3 p-2 bg-light rounded">{code.code}</div>
                   <p className="card-text">
                     <small className="text-muted">
                       <i className="fas fa-user me-1"></i>Added by: {code.user.name}<br />
@@ -81,7 +77,7 @@ const Archive = () => {
                       <i className="fas fa-copy me-1"></i>Copies: {code.copyCount}
                     </span>
                     {code.user._id === user._id && (
-                      <button 
+                      <button
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => handleUnarchive(code._id)}
                       >

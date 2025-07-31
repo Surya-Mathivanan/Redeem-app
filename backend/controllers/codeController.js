@@ -7,9 +7,13 @@ const { checkRapidCopying } = require('../middleware/authMiddleware');
 // @route   GET /api/codes
 // @access  Private
 const getCodes = asyncHandler(async (req, res) => {
+  const fourteenDaysAgo = new Date();
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+  
   const codes = await RedeemCode.find({
     isArchived: false,
-    copyCount: { $lte: 4 }
+    copyCount: { $lte: 4 },
+    createdAt: { $gte: fourteenDaysAgo } // Changed from 7 to 14 days
   })
     .populate('user', 'name')
     .sort({ copyCount: 1 });
@@ -40,9 +44,10 @@ const getCodes = asyncHandler(async (req, res) => {
 // @access  Private
 const getArchivedCodes = asyncHandler(async (req, res) => {
   const codes = await RedeemCode.find({
-    user: req.user._id,
     isArchived: true
-  }).sort({ createdAt: -1 });
+  })
+    .populate('user', 'name')
+    .sort({ createdAt: -1 });
 
   res.status(200).json(codes);
 });

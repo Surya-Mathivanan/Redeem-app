@@ -43,9 +43,10 @@ const Archive = () => {
         <span className="badge bg-secondary fs-6">{archivedCodes.length} Archived Codes</span>
       </div>
 
+      
       <div className="alert alert-info">
         <i className="fas fa-info-circle me-2"></i>
-        This page shows codes that are no longer active – either expired (older than 7 days) or exhausted (5 or more copies).
+        This page shows codes that are no longer active – either expired (older than 14 days) or exhausted (5 or more copies).
       </div>
 
       {loading ? (

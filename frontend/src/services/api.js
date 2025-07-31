@@ -1,14 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000",
+  baseURL: "http://localhost:5000/api",
 });
 
-// Remove hardcoded URL and use environment variable only
-if (process.env.NODE_ENV === "production") {
-  api.defaults.baseURL = process.env.REACT_APP_API_URL;
-}
-
+// Remove the production check since we're running locally
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");

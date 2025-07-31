@@ -14,12 +14,10 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 
-// ✅ CORRECT CORS CONFIGURATION - Single source of truth
+// ✅ LOCAL CORS CONFIGURATION
 const allowedOrigins = [
-  'http://localhost:3000',           // Local development
-  'http://localhost:5000',           // Local backend
-  'https://redeem-app-backend-v2.onrender.com', // Backend
-  'https://redeem-app-frontend-v2.onrender.com'  // Frontend after deployment
+  'http://localhost:3000',           // Frontend
+  'http://localhost:5000',           // Backend
 ];
 
 // Proper CORS middleware setup

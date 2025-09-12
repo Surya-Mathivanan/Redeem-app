@@ -1,321 +1,544 @@
-# Redeem App - Redeem Code Management System
+# Redeem Code Distributor
 
----
+A comprehensive web application for managing and distributing Google Pay redeem codes with robust user authentication, tracking, and security features. This platform allows users to securely register, login, add redeem codes, and track their usage while preventing misuse through advanced monitoring systems.
 
-## 🎯 Project Overview
+## 📌 Project Overview
 
-**Redeem App** is a secure, full-stack web application designed for managing and sharing redeem codes. This platform allows users to create, share, and manage redeem codes efficiently. To maintain code integrity and prevent overuse, the system automatically archives codes after 5 copies, ensuring fair distribution and preventing abuse.
+The Google Pay Redeem Code Distributor is a full-stack web application that enables users to share and redeem Google Pay reward codes in a controlled environment. The system features secure user authentication, real-time code tracking, misuse prevention, and an intuitive user interface built with React. It ensures data integrity, prevents unauthorized access, and maintains a clean database through automated cleanup processes.
 
+## 🚀 Features
 
-
----
-## Live URL:
-* [Redeem App](https://redeem-appp.vercel.app/) : https://redeem-appp.vercel.app/
-
----
-## Interface
-<img width="1366" height="765" alt="Image" src="https://github.com/user-attachments/assets/d51d1bd5-bddb-40c1-90ec-fc73b8d258dc" />
-
-<img width="1366" height="763" alt="Image" src="https://github.com/user-attachments/assets/3ecf49fc-24f7-4ba6-ba73-4ed8ee7aabfa" />
-
-<img width="1366" height="765" alt="Image" src="https://github.com/user-attachments/assets/45136185-89c6-4474-94d2-3731ac5977c2" />
-
-
-<img width="1347" height="763" alt="Image" src="https://github.com/user-attachments/assets/a7921a01-e962-4def-a5bc-f168d24651d0" />
-
-
-<img width="1366" height="767" alt="Image" src="https://github.com/user-attachments/assets/718bcced-eccf-4c9a-bc07-79f82d3d3524" />
-
-<img width="1366" height="764" alt="Image" src="https://github.com/user-attachments/assets/779de292-fffc-444f-a2d5-33687bcec663" />
-<img width="1366" height="765" alt="Image" src="https://github.com/user-attachments/assets/a58afbe5-8c5c-4def-bcff-7bc51f2cb73b" />
-
-
-
-
-
-
-
-
-
-
-
-
-
----
+- **User Authentication**: Secure registration and login system with email validation
+- **Code Management**: Add, view, archive, and manage redeem codes with titles and descriptions
+- **Copy Tracking**: Track how many times each code has been copied with unique user constraints
+- **User Dashboard**: View personal statistics including codes added and copy counts
+- **Archive System**: Archive expired or unused codes for better organization
+- **Misuse Prevention**: Advanced logging and suspension system for suspicious activities
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Real-time Updates**: Live tracking of code usage and user activities
+- **Session Management**: Secure session handling with automatic logout on inactivity
 
 ## 🛠️ Tech Stack
 
-The Redeem App is built with a robust and modern technology stack, ensuring a scalable, responsive, and secure experience.
----
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB with Mongoose ODM
+- **Frontend**: React.js with modern hooks and context API
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **Security**: Helmet for security headers, CORS configuration
+- **Deployment**: Configured for Vercel and Render deployment
 
-### Frontend
-
-* **React JS** - UI framework
-* **React Router v6** - Client-side routing
-* **Axios** - HTTP client for API requests
-* **React Hot Toast** - User-friendly notifications
-* **Tailwind CSS** - Utility-first CSS framework for rapid styling
-* **Vite** - Fast build tool and development server
----
-
-### Backend
-
-* **Node.js** - JavaScript runtime environment
-* **Express.js** - Fast, unopinionated, minimalist web framework
-* **MongoDB** - NoSQL database for flexible data storage
-* **Mongoose** - ODM (Object Document Mapper) for MongoDB and Node.js
-* **JWT (JSON Web Tokens)** - Secure authentication tokens
-* **bcryptjs** - Library for hashing passwords
-* **express-async-handler** - Middleware for handling asynchronous errors
----
-
-### Deployment & DevOps
-
-* **Vercel** - Frontend hosting
-* **MongoDB Atlas** - Cloud database service
-* **Render** - Backend hosting
-* **Git** - Version control system
-
----
-
-## ✨ Key Features
-
-### User Management
-
-* **Secure Authentication** - JWT-based login and registration for robust security.
-* **Account Protection** - Automatic suspension for rapid copying attempts (5+ attempts/minute) to prevent abuse.
-* **Profile Management** - Users can easily update their personal information.
----
-
-### Code Management
-
-* **Create Codes** - Add new redeem codes with descriptive titles.
-* **Smart Archiving** - Codes are automatically archived once their `copyCount` reaches 5.
-* **Copy Tracking** - Detailed tracking of who copied what and when.
-* **Archive System** - View archived codes separately from active ones.
----
-
-### Anti-Abuse System
-
-* **Rapid Copying Prevention** - Users are suspended for 1 minute if they make 5 or more rapid copy attempts within a minute.
-* **Copy Limits** - Each user can copy a specific code only once.
-* **Activity Monitoring** - Comprehensive tracking and logging of suspicious user behavior.
----
-### User Experience
-
-* **Real-time Updates** - Instant feedback through toast notifications for user actions.
-* **Responsive Design** - Optimized for seamless use across desktop and mobile devices.
-* **Time-based Display** - User-friendly formatting for timestamps (e.g., "Just now", "X minutes ago", "Yesterday").
-* **Copy Confirmation** - Visual feedback when codes are successfully copied.
-
----
-
-## 🚀 Quick Start
-
-Follow these steps to get the Redeem App up and running on your local machine for development.
----
-### Prerequisites
-
-* **Node.js** (v16 or higher)
-* **MongoDB Atlas** account (or a local MongoDB instance)
-* **npm** or **yarn** package manager
----
-### Installation
-
-1.  **Clone the Repository:**
-
-    ```bash
-    git clone [https://github.com/Surya-Mathivanan/Redeem-app.git](https://github.com/Surya-Mathivanan/Redeem-app.git)
-    cd Redeem-app
-    ```
-
-2.  **Backend Setup:**
-
-    ```bash
-    cd backend
-    npm install
-    ```
-
-    Create a `.env` file in the `backend` directory with the following variables:
-
-    ```env
-    PORT=5000
-    MONGO_URI=your_mongodb_connection_string
-    JWT_SECRET=your_jwt_secret_key
-    NODE_ENV=development
-    ```
-
-3.  **Frontend Setup:**
-
-    ```bash
-    cd frontend
-    npm install
-    ```
-
-    Create a `.env` file in the `frontend` directory:
-
-    ```env
-    VITE_API_URL=http://localhost:5000/api
-    ```
----
-### Run Development Servers
-
-1.  **Backend:**
-
-    ```bash
-    cd backend
-    npm run dev
-    ```
-
-2.  **Frontend:**
-
-    ```bash
-    cd frontend
-    npm run dev
-    ```
-
-    Open your web browser and navigate to the address provided by the frontend development server (usually `http://localhost:5173` or similar).
-
----
-
-## 📁 Project Structure
+## 📂 Project Structure
 
 ```
 Redeem-app/
-├── frontend/             # React application
+│
+├── backend/                          # Node.js/Express backend
+│   ├── controllers/                  # Route controllers
+│   │   ├── authController.js         # Authentication logic
+│   │   ├── codeController.js         # Code management logic
+│   │   └── userController.js         # User management logic
+│   ├── middleware/                   # Custom middleware
+│   │   ├── authMiddleware.js         # JWT authentication middleware
+│   │   └── errorMiddleware.js        # Error handling middleware
+│   ├── models/                       # MongoDB schemas
+│   │   ├── userModel.js              # User schema
+│   │   ├── redeemCodeModel.js        # Redeem code schema
+│   │   ├── copyModel.js              # Copy tracking schema
+│   │   ├── misuseLogModel.js         # Misuse logging schema
+│   │   └── suspensionModel.js        # User suspension schema
+│   ├── routes/                       # API routes
+│   │   ├── auth.js                   # Authentication routes
+│   │   ├── codes.js                  # Code management routes
+│   │   └── users.js                  # User management routes
+│   ├── package.json                  # Backend dependencies
+│   └── server.js                     # Main server file
+│
+├── frontend/                         # React frontend
+│   ├── public/                       # Static assets
 │   ├── src/
-│   │   ├── components/   # Reusable components
-│   │   ├── pages/        # Page components
-│   │   ├── context/      # React contexts for state management
-│   │   └── services/     # API service integrations
-│   └── public/           # Static assets
-├── backend/              # Express API
-│   ├── controllers/      # Route controllers
-│   ├── middleware/       # Custom middleware
-│   ├── models/           # Database models (Mongoose schemas)
-│   └── routes/           # API routes
-├── README.md
-└── vercel.json           # Deployment configuration for Vercel
+│   │   ├── components/               # Reusable components
+│   │   │   ├── CodeCard.js           # Code display component
+│   │   │   └── Layout.js             # Main layout component
+│   │   ├── context/                  # React context
+│   │   │   └── AuthContext.js        # Authentication context
+│   │   ├── pages/                    # Page components
+│   │   │   ├── Login.js              # Login page
+│   │   │   ├── Register.js           # Registration page
+│   │   │   ├── Home.js               # Home/dashboard page
+│   │   │   ├── AddCode.js            # Add code page
+│   │   │   ├── Account.js            # User account page
+│   │   │   ├── Dashboard.js          # Statistics dashboard
+│   │   │   ├── Archive.js            # Archived codes page
+│   │   │   └── NotFound.js           # 404 page
+│   │   ├── services/                 # API services
+│   │   │   └── api.js                # API client functions
+│   │   ├── App.js                    # Main app component
+│   │   └── index.js                  # App entry point
+│   ├── package.json                  # Frontend dependencies
+│   └── build/                        # Production build
+│
+├── package.json                      # Root package.json
+├── vercel.json                       # Vercel deployment config
+├── render.yaml                       # Render deployment config
+└── README.md                         # This file
 ```
 
----
+## 🔄 Application Flow Diagram
 
-## 🔧 API Endpoints
+```
+┌─────────────┐
+│    Start    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────────┐
+│  Register   │◄────┤   Login Page    │
+│   / Login   │     └─────────────────┘
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐     No
+│ Authenticate│─────────────┐
+│  User       │             │
+└──────┬──────┘             │
+       │ Yes                │
+       ▼                    │
+┌─────────────┐             │
+│   Success   │             │
+└──────┬──────┘             │
+       │                    │
+       ▼                    ▼
+┌─────────────┐     ┌─────────────┐
+│  Dashboard  │     │   Error     │
+│             │     │  Message    │
+└──────┬──────┘     └─────────────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│ View Stats  │◄────┤ Add New     │
+│             │     │ Code        │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│   Home      │     │ Save to     │
+│   Page      │     │ Database    │
+└──────┬──────┘     └─────────────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│ View All    │◄────┤ Copy Code   │
+│ Codes       │     │ (Button)    │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│ Check if    │     │ Already     │
+│ Copied      │     │ Copied?     │
+└──────┬──────┘     └──────┬──────┘
+       │                   │
+       │ No                │ Yes
+       ▼                   ▼
+┌─────────────┐     ┌─────────────┐
+│ Copy to     │     │ Show        │
+│ Clipboard   │     │ Message     │
+└──────┬──────┘     └─────────────┘
+       │
+       ▼
+┌─────────────┐     ┌─────────────┐
+│ Log Copy    │◄────┤ Increment   │
+│ in Database │     │ Count       │
+└──────┬──────┘     └─────────────┘
+       │
+       ▼
+┌─────────────┐
+│ Account     │
+│ Page        │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│   Logout    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│ Clear       │
+│ Session     │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│  End        │
+└─────────────┘
+```
 
-### Authentication
+## 🏗️ Setup Instructions
 
-* `POST /api/auth/register` - Register a new user.
-* `POST /api/auth/login` - User login.
-* `GET /api/auth/me` - Get the current authenticated user's details.
-* `PUT /api/auth/profile` - Update the user's profile information.
----
-### Codes
+### Prerequisites
 
-* `GET /api/codes` - Retrieve active codes (where `copyCount` is less than or equal to 4).
-* `GET /api/codes/archive` - Retrieve all archived codes.
-* `GET /api/codes/user` - Get codes created by the current user.
-* `POST /api/codes` - Create a new redeem code.
-* `PUT /api/codes/:id` - Update an existing code by ID.
-* `DELETE /api/codes/:id` - Delete a code by ID.
-* `PUT /api/codes/:id/archive` - Manually archive a code.
-* `PUT /api/codes/:id/unarchive` - Unarchive a code.
-* `POST /api/codes/:id/copy` - Copy a code (increments its `copyCount`).
+- Node.js (version 14 or higher)
+- npm or yarn package manager
+- MongoDB (local installation or cloud service like MongoDB Atlas)
+- Git (for cloning the repository)
 
----
+### Detailed Installation Steps
 
-## 🎯 Core Logic
+1. **Clone the Repository**
+   ```
+   git clone <repository-url>
+   cd Redeem-app
+   ```
 
-### Automatic Archiving
+2. **Backend Setup**
+   - Navigate to the backend directory:
+     ```
+     cd backend
+     ```
+   - Install backend dependencies:
+     ```
+     npm install
+     ```
+   - Create a `.env` file in the backend directory with the following variables:
+     ```
+     NODE_ENV=development
+     PORT=5000
+     MONGO_URI=mongodb://localhost:27017/redeem_app
+     JWT_SECRET=your_super_secret_jwt_key_here
+     JWT_EXPIRE=30d
+     ```
+     Replace `MONGO_URI` with your MongoDB connection string if using a cloud service.
 
-* Codes are automatically moved to the archive when their `copyCount` reaches 5 or more.
-* Archived codes are no longer displayed on the main "Home" page but are accessible on the "Archive" page.
-* Users can still view and manage archived codes they originally created.
----
-### Suspension System
+3. **Frontend Setup**
+   - Open a new terminal and navigate to the frontend directory:
+     ```
+     cd frontend
+     ```
+   - Install frontend dependencies:
+     ```
+     npm install
+     ```
 
-* A user attempting to copy 5 or more codes within a 1-minute window will be suspended for 1 minute.
-* Suspension messages provide clear, formatted timestamps.
-* The system automatically lifts the suspension after the 1-minute period.
----
-### Copy Tracking
+4. **Database Configuration**
+   - Ensure MongoDB is running locally or your cloud database is accessible
+   - The application will automatically create the necessary collections when you start the server
+   - No manual database schema creation is required as Mongoose handles schema definition
 
-* Every successful code copy creates a record in the dedicated `Copy` collection.
-* This system prevents users from copying the same code multiple times.
-* It enables precise tracking of copy counts and comprehensive monitoring of user activity.
+5. **Environment Variables**
+   - For production deployment, update the environment variables in your deployment platform
+   - Ensure `NODE_ENV` is set to `production` for production builds
 
----
+6. **Running the Application**
+   - Start the backend server:
+     ```
+     cd backend
+     npm start
+     ```
+     The backend will run on `http://localhost:5000`
+   - In a separate terminal, start the frontend:
+     ```
+     cd frontend
+     npm start
+     ```
+     The frontend will run on `http://localhost:3000`
 
-## 🌐 Deployment
+7. **Access the Application**
+   - Open your web browser
+   - Navigate to `http://localhost:3000`
+   - The application will automatically connect to the backend API
 
-### Frontend (Vercel)
+## 📖 Usage
 
-1.  Navigate to the `frontend` directory.
-2.  Run `vercel --prod` to deploy to Vercel.
+### First Time Setup
 
-### Backend (Render)
+1. **User Registration**
+   - Click on the "Register" link on the login page
+   - Fill in your name, email, and password
+   - Password must be at least 6 characters long
+   - Click "Register" to create your account
+   - You'll be redirected to the login page
 
-1.  Connect your GitHub repository to Render.
-2.  Set the necessary environment variables (e.g., `PORT`, `MONGO_URI`, `JWT_SECRET`, `NODE_ENV`) in the Render dashboard.
-3.  Render is configured to deploy automatically on pushes to the `main` branch.
+2. **User Login**
+   - Enter your registered email and password
+   - Click "Login" to authenticate
+   - Upon successful login, you'll be redirected to the dashboard
 
----
+### Core Features
 
-## 📝 Environment Variables
+#### Dashboard
+- View your personal statistics
+- See total codes added by you
+- Monitor copy counts for your codes
+- Access quick navigation to other sections
 
-### Backend (`.env` in `backend/`)
+#### Adding Codes
+- Navigate to "Add Code" from the dashboard
+- Enter a title for your code (e.g., "₹100 Cashback")
+- Enter the actual redeem code
+- Click "Add Code" to save it to the database
+- Codes are immediately visible to other users on the home page
 
-* `PORT` - The port on which the server will run (default: `5000`).
-* `MONGO_URI` - Your MongoDB connection string.
-* `JWT_SECRET` - A secret key used for signing JWT tokens.
-* `NODE_ENV` - The environment setting (e.g., `development`, `production`).
+#### Home Page
+- Browse all available redeem codes in card format
+- Each card shows the code title, creator, and copy count
+- Click the "Copy" button to copy the code to your clipboard
+- Each user can copy each code only once
+- Real-time updates show current copy counts
 
-### Frontend (`.env` in `frontend/`)
+#### Account Management
+- View your profile information
+- Change password if needed
+- Logout from the application
+- View account status (active/suspended)
 
-* `VITE_API_URL` - The base URL for your backend API (e.g., `http://localhost:5000/api` for development).
+#### Archive System
+- View codes that have been archived
+- Archive your own codes when they're no longer valid
+- Archived codes are hidden from the main home page
 
----
+### Advanced Features
 
-## 🧪 Development Tips
+- **Copy Tracking**: The system prevents duplicate copies by the same user
+- **Real-time Updates**: Copy counts update immediately across all users
+- **Session Security**: Automatic logout after period of inactivity
+- **Responsive Design**: Optimized for mobile and desktop use
 
-* Use **MongoDB Compass** or **MongoDB Atlas UI** for visual database management and inspection.
-* Regularly check your **browser's developer tools** (Console and Network tabs) for API call status and real-time responses.
-* Utilize **Postman** or **Insomnia** for comprehensive API testing during development.
+## 🗄️ Database Schema
 
----
+### Users Collection
+```javascript
+{
+  name: String (required),
+  email: String (required, unique),
+  password: String (required, min 6 chars, hashed),
+  isSuspended: Boolean (default: false),
+  suspendedUntil: Date (default: null),
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### RedeemCodes Collection
+```javascript
+{
+  title: String (required),
+  code: String (required),
+  user: ObjectId (ref: 'User', required),
+  copyCount: Number (default: 0),
+  isArchived: Boolean (default: false),
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Copies Collection
+```javascript
+{
+  user: ObjectId (ref: 'User', required),
+  redeemCode: ObjectId (ref: 'RedeemCode', required),
+  createdAt: Date,
+  updatedAt: Date
+}
+// Unique compound index on (user, redeemCode)
+```
+
+### MisuseLogs Collection
+```javascript
+{
+  user: ObjectId (ref: 'User', required),
+  actionType: String (enum: ['RAPID_COPYING', 'MULTIPLE_ACCOUNTS', 'SUSPICIOUS_ACTIVITY', 'OTHER']),
+  details: String (required),
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Suspensions Collection
+```javascript
+{
+  user: ObjectId (ref: 'User', required),
+  reason: String (required),
+  suspendedUntil: Date (required),
+  isActive: Boolean (default: true),
+  createdAt: Date,
+  updatedAt: Date
+}
+```
 
 ## 🔒 Security Features
 
-* **Password Hashing** - Implemented with `bcryptjs` to securely store user passwords.
-* **JWT Token Authentication** - Ensures secure user sessions and API access.
-* **Rate Limiting** - Applied to copy attempts to prevent brute-force attacks and abuse.
-* **Input Validation** - All API endpoints include robust input validation to prevent malicious data.
-* **CORS Configuration** - Properly configured for secure communication between frontend and backend in production.
+- **Password Hashing**: Uses bcrypt with salt rounds for secure password storage
+- **JWT Authentication**: JSON Web Tokens for stateless session management
+- **Input Validation**: Comprehensive validation for all user inputs
+- **SQL Injection Prevention**: Parameterized queries with Mongoose
+- **CORS Configuration**: Controlled cross-origin resource sharing
+- **Helmet Security Headers**: Security headers to protect against common vulnerabilities
+- **Rate Limiting**: Prevents brute force attacks on authentication endpoints
+- **User Suspension System**: Automatic suspension for suspicious activities
+- **Misuse Logging**: Detailed logging of potentially harmful actions
+- **Session Expiry**: Automatic logout after configurable period of inactivity
 
----
+## 🔧 Troubleshooting
 
-## 🎨 UI/UX Features
+### Common Issues
 
-* **Responsive Design** - Adapts seamlessly to various screen sizes, from mobile phones to large desktops.
-* **Loading States** - Provides visual feedback during data fetching for a smoother user experience.
-* **Toast Notifications** - Delivers real-time, non-intrusive feedback for user actions.
-* **Real-time Copy Count Updates** - Instantly reflects changes in code copy counts.
-* **Intuitive Navigation** - Easy switching between "Home" (active codes) and "Archive" pages.
+1. **Database Connection Error**
+   - **Symptom**: Application fails to start with MongoDB connection errors
+   - **Solution**:
+     - Ensure MongoDB is running locally or your cloud database is accessible
+     - Check the `MONGO_URI` in your `.env` file
+     - Verify network connectivity if using MongoDB Atlas
+     - Check firewall settings if applicable
 
----
+2. **Module Import Error**
+   - **Symptom**: `npm install` fails or runtime import errors
+   - **Solution**:
+     - Delete `node_modules` folder and `package-lock.json`
+     - Run `npm install` again
+     - Ensure you're using the correct Node.js version (14+)
+     - Check for conflicting package versions
+
+3. **Port Already in Use**
+   - **Symptom**: Error message "Port 5000 is already in use"
+   - **Solution**:
+     - Change the port in `backend/server.js` or `.env` file
+     - Find and kill the process using the port: `npx kill-port 5000`
+     - Use a different port like 5001
+
+4. **Frontend Build Errors**
+   - **Symptom**: React app fails to compile
+   - **Solution**:
+     - Clear npm cache: `npm cache clean --force`
+     - Delete `node_modules` and reinstall
+     - Check for syntax errors in React components
+     - Ensure all dependencies are compatible
+
+5. **Authentication Issues**
+   - **Symptom**: Unable to login or register
+   - **Solution**:
+     - Verify email format is correct
+     - Ensure password meets minimum requirements
+     - Check JWT_SECRET is properly set
+     - Clear browser cache and cookies
+
+6. **CORS Errors**
+   - **Symptom**: Browser console shows CORS-related errors
+   - **Solution**:
+     - Ensure backend is running on the correct port
+     - Check CORS configuration in `backend/server.js`
+     - Verify frontend is making requests to the correct backend URL
+
+### Debug Mode
+
+- Set `NODE_ENV=development` in `.env` for detailed error logging
+- Check browser developer tools for network and console errors
+- Monitor MongoDB logs for database-related issues
+- Use tools like Postman to test API endpoints independently
+
+## 📸 Screenshots
+
+### Login Page
+![Login Page](https://github.com/user-attachments/assets/3cdf1947-c983-497f-a55d-81a5440605ec)
+
+### Register Page
+![Register Page](https://github.com/user-attachments/assets/771d5513-d5df-41ca-a1e2-fdf811ee7f18)
+
+### Home Page
+![Home Page](https://github.com/user-attachments/assets/110241e4-d2f4-4777-aa6a-995fc121541d)
+
+### Account Page
+![Account Page](https://github.com/user-attachments/assets/95e30b15-08cc-4bbc-8176-506cc81bd8bf)
+
+### Add Code Page
+![Add Code Page](https://github.com/user-attachments/assets/b2aa4164-bfaf-4383-83ca-6cad42babd44)
+
+### Dashboard Page
+![Dashboard Page](https://github.com/user-attachments/assets/c9c8dfce-a0ee-4019-83ae-55ed493e598c)
+
+### Archive Page
+![Archive Page](https://github.com/user-attachments/assets/587f4268-8f2b-4f48-9d70-abdfb59ee9af)
+
+## 🚀 Deployment
+
+### Vercel Deployment (Frontend)
+1. Connect your GitHub repository to Vercel
+2. Set build settings:
+   - Build Command: `npm run build`
+   - Output Directory: `build`
+   - Install Command: `npm install`
+3. Add environment variables in Vercel dashboard
+4. Deploy automatically on push
+
+### Render Deployment (Backend)
+1. Connect your GitHub repository to Render
+2. Create a new Web Service
+3. Set build and start commands:
+   - Build Command: `npm install`
+   - Start Command: `npm start`
+4. Add environment variables in Render dashboard
+5. Deploy and get your backend URL
+
+### Environment Variables for Production
+```
+NODE_ENV=production
+MONGO_URI=your_production_mongodb_uri
+JWT_SECRET=your_production_jwt_secret
+JWT_EXPIRE=30d
+FRONTEND_URL=https://your-frontend-domain.vercel.app
+```
 
 ## 🤝 Contributing
 
-Contributions are welcome! If you have suggestions for improvements or new features, please:
+We welcome contributions to improve the Google Pay Redeem Code Distributor!
 
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/YourFeature`).
-3.  Make your changes.
-4.  Commit your changes (`git commit -m 'Add some feature'`).
-5.  Push to the branch (`git push origin feature/YourFeature`).
-6.  Open a Pull Request.
+### How to Contribute
 
----
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Make your changes and test thoroughly
+4. Commit your changes: `git commit -m 'Add some feature'`
+5. Push to the branch: `git push origin feature/your-feature-name`
+6. Open a Pull Request
+
+### Development Guidelines
+
+- Follow the existing code style and structure
+- Write clear, concise commit messages
+- Test your changes before submitting
+- Update documentation if needed
+- Ensure all dependencies are properly listed
+
+### Areas for Contribution
+
+- UI/UX improvements
+- Additional security features
+- Performance optimizations
+- Mobile app development
+- API enhancements
+- Testing implementation
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+1. Check the troubleshooting section above
+2. Search existing GitHub issues
+3. Create a new issue with detailed information
+4. Include error messages, steps to reproduce, and your environment details
+
+## 🔄 Future Enhancements
+
+- [ ] Implement OTP-based two-factor authentication
+- [ ] Add email notifications for code expiration
+- [ ] Develop mobile applications (iOS/Android)
+- [ ] Implement advanced analytics and reporting
+- [ ] Add code categories and filtering
+- [ ] Integrate with Google Pay API for validation
+- [ ] Add bulk code import/export functionality
+- [ ] Implement real-time notifications
+- [ ] Add user roles and permissions
+- [ ] Create admin dashboard for system management

@@ -82,6 +82,17 @@ const CodeCard = ({ code, onCopySuccess }) => {
       </div>
       
       <div className="code-content">
+        {/* Category + description */}
+        {(code.category || code.description) && (
+          <div className="code-meta-top">
+            {code.category && (
+              <span className="code-category-badge">{code.category}</span>
+            )}
+            {code.description && (
+              <p className="code-description-text">{code.description}</p>
+            )}
+          </div>
+        )}
         <div className="code-display-container">
           <div className={`code-display ${isBlurred ? 'blurred' : ''}`}>
             {code.code}

@@ -1,7 +1,11 @@
 import axios from "axios";
 
+// Use env variable so dev hits localhost:5000 and production hits Render
+const baseURL =
+  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+
 const api = axios.create({
-  baseURL: "https://redeem-appp.onrender.com/api",
+  baseURL,
 });
 
 // Remove the production check since we're running locally

@@ -11,6 +11,7 @@ const {
   deleteCode,
   copyCode,
   getStats,
+  getCategories,
 } = require('../controllers/codeController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -24,6 +25,7 @@ router.route('/')
 router.get('/archive', getArchivedCodes);
 router.get('/user', getUserCodes);
 router.get('/stats', getStats);
+router.get('/categories', getCategories);
 
 router.route('/:id')
   .put(updateCode)
@@ -34,4 +36,5 @@ router.put('/:id/unarchive', unarchiveCode);
 router.post('/:id/copy', copyCode);
 
 module.exports = router;
+
 

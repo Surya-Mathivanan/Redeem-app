@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const RedeemCode = require('../models/redeemCodeModel');
+const { CATEGORIES } = require('../models/redeemCodeModel');
 const Copy = require('../models/copyModel');
 const { checkRapidCopying } = require('../middleware/authMiddleware');
 
@@ -9,32 +10,49 @@ const { checkRapidCopying } = require('../middleware/authMiddleware');
 const getCodes = asyncHandler(async (req, res) => {
   const fourteenDaysAgo = new Date();
   fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
-  
-  const codes = await RedeemCode.find({
+
+  const query = {
     isArchived: false,
     copyCount: { $lte: 4 },
-    createdAt: { $gte: fourteenDaysAgo } // Changed from 7 to 14 days
-  })
+    createdAt: { $gte: fourteenDaysAgo },
+  };
+
+  // Support category filtering via ?category=
+  if (req.query.category && req.query.category !== 'All') {
+    query.category = req.query.category;
+  }
+
+  // Support text search via ?search=
+  if (req.query.search) {
+    const searchRegex = new RegExp(req.query.search, 'i');
+    query.$or = [
+      { title: searchRegex },
+      { description: searchRegex },
+      { category: searchRegex },
+    ];
+  }
+
+  const codes = await RedeemCode.find(query)
     .populate('user', 'name')
     .sort({ copyCount: 1 });
 
   const userCopies = await Copy.find({ user: req.user._id }).select('redeemCode');
   const userCopiedCodeIds = userCopies.map(copy => copy.redeemCode.toString());
 
-  const formattedCodes = codes.map(code => {
-    return {
-      _id: code._id,
-      title: code.title,
-      code: code.code,
-      user: {
-        _id: code.user._id,
-        name: code.user.name
-      },
-      createdAt: code.createdAt,
-      copyCount: code.copyCount,
-      hasCopied: userCopiedCodeIds.includes(code._id.toString())
-    };
-  });
+  const formattedCodes = codes.map(code => ({
+    _id: code._id,
+    title: code.title,
+    description: code.description,
+    category: code.category,
+    code: code.code,
+    user: {
+      _id: code.user._id,
+      name: code.user.name,
+    },
+    createdAt: code.createdAt,
+    copyCount: code.copyCount,
+    hasCopied: userCopiedCodeIds.includes(code._id.toString()),
+  }));
 
   res.status(200).json(formattedCodes);
 });
@@ -64,7 +82,7 @@ const getUserCodes = asyncHandler(async (req, res) => {
 // @route   POST /api/codes
 // @access  Private
 const createCode = asyncHandler(async (req, res) => {
-  const { title, code } = req.body;
+  const { title, code, category, description } = req.body;
 
   if (!title || !code) {
     res.status(400);
@@ -74,6 +92,8 @@ const createCode = asyncHandler(async (req, res) => {
   const redeemCode = await RedeemCode.create({
     title,
     code,
+    category: category || 'Other',
+    description: description || '',
     user: req.user._id,
   });
 
@@ -165,7 +185,7 @@ const deleteCode = asyncHandler(async (req, res) => {
     throw new Error('Not authorized to delete this code');
   }
 
-  await code.remove();
+  await code.deleteOne();
 
   res.status(200).json({ id: req.params.id });
 });
@@ -220,11 +240,22 @@ const copyCode = asyncHandler(async (req, res) => {
 const getStats = asyncHandler(async (req, res) => {
   const addedCodes = await RedeemCode.countDocuments({ user: req.user._id });
   const totalCopies = await Copy.countDocuments({ user: req.user._id });
+  const archivedCodes = await RedeemCode.countDocuments({ user: req.user._id, isArchived: true });
+  const activeCodes = await RedeemCode.countDocuments({ user: req.user._id, isArchived: false });
 
   res.status(200).json({
     addedCodes,
     totalCopies,
+    archivedCodes,
+    activeCodes,
   });
+});
+
+// @desc    Get available categories
+// @route   GET /api/codes/categories
+// @access  Private
+const getCategories = asyncHandler(async (req, res) => {
+  res.status(200).json(CATEGORIES);
 });
 
 module.exports = {
@@ -238,4 +269,5 @@ module.exports = {
   deleteCode,
   copyCode,
   getStats,
+  getCategories,
 };

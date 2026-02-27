@@ -219,7 +219,7 @@ const Archive = () => {
             <FontAwesomeIcon icon={faFilter} className="me-2" style={{ color: '#8b949e' }} />
             Showing <strong>{filteredCodes.length}</strong> of <strong>{archivedCodes.length}</strong> archived codes
           </div>
-          <div className="row g-4">
+          <div className="archive-grid row g-4">
             {filteredCodes.map(code => {
               const reason = getArchiveReason(code);
               const owned = isOwner(code);

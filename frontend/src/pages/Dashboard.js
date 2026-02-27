@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
+import Pagination from '../components/Pagination';
 import { toast } from 'react-toastify';
 import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,17 +19,66 @@ const CONTRIBUTION_LEVELS = [
   { min: 50, max: Infinity, label: 'Legends Club', color: '#f85149', icon: faFire },
 ];
 
-const getLevel = (addedCodes) =>
-  CONTRIBUTION_LEVELS.find(l => addedCodes >= l.min && addedCodes <= l.max) || CONTRIBUTION_LEVELS[0];
+const getLevel = (n) =>
+  CONTRIBUTION_LEVELS.find(l => n >= l.min && n <= l.max) || CONTRIBUTION_LEVELS[0];
 
 const formatRelative = (dateStr) => {
   const diff = (Date.now() - new Date(dateStr)) / 1000;
-  if (diff < 60)   return 'just now';
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 60)    return 'just now';
+  if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   return `${Math.floor(diff / 86400)}d ago`;
 };
 
+const PAGE_SIZE = 5;
+
+// ── Paginated activity list sub-component ──────────────────────────────────
+const ActivityList = ({ items, loading, emptyIcon, emptyMsg, emptyLink, emptyLinkLabel, renderItem, accentColor, headerIcon, headerLabel }) => {
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(items.length / PAGE_SIZE);
+  const paged = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  return (
+    <div className="activity-card">
+      <div className="activity-card-header">
+        <FontAwesomeIcon icon={headerIcon} className="me-2" style={{ color: accentColor }} />
+        {headerLabel}
+        {items.length > 0 && (
+          <span className="activity-count-badge ms-auto">{items.length} total</span>
+        )}
+      </div>
+
+      {loading ? (
+        <div className="text-center py-3">
+          <div className="spinner-border spinner-border-sm text-primary" role="status" />
+        </div>
+      ) : items.length === 0 ? (
+        <div className="activity-empty">
+          <FontAwesomeIcon icon={emptyIcon} className="me-2" />
+          {emptyMsg} {emptyLink && <Link to={emptyLink}>{emptyLinkLabel}</Link>}
+        </div>
+      ) : (
+        <>
+          <ul className="activity-list">
+            {paged.map(renderItem)}
+          </ul>
+          {totalPages > 1 && (
+            <div className="activity-pagination">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                compact
+              />
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────────────────────────────────────
 const Dashboard = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({ totalCopies: 0, addedCodes: 0, archivedCodes: 0, activeCodes: 0 });
@@ -41,7 +91,7 @@ const Dashboard = () => {
       try {
         const res = await api.get('/codes/stats');
         setStats(res.data);
-      } catch (error) {
+      } catch {
         toast.error('Failed to load dashboard statistics');
       } finally {
         setLoading(false);
@@ -51,8 +101,8 @@ const Dashboard = () => {
       try {
         const res = await api.get('/users/activity');
         setActivity(res.data);
-      } catch (error) {
-        console.error('Error fetching activity:', error);
+      } catch (e) {
+        console.error('Activity fetch error:', e);
       } finally {
         setActivityLoading(false);
       }
@@ -69,38 +119,10 @@ const Dashboard = () => {
   const contributionScore = stats.addedCodes * 10 + stats.totalCopies * 2;
 
   const statCards = [
-    {
-      label: 'Codes Copied',
-      value: stats.totalCopies,
-      icon: faCopy,
-      color: '#58a6ff',
-      bg: 'rgba(88,166,255,0.1)',
-      link: '/',
-    },
-    {
-      label: 'Codes Added',
-      value: stats.addedCodes,
-      icon: faPlus,
-      color: '#3fb950',
-      bg: 'rgba(63,185,80,0.1)',
-      link: '/add-code',
-    },
-    {
-      label: 'Active Codes',
-      value: stats.activeCodes,
-      icon: faGift,
-      color: '#f9c513',
-      bg: 'rgba(249,197,19,0.1)',
-      link: '/',
-    },
-    {
-      label: 'Archived Codes',
-      value: stats.archivedCodes,
-      icon: faArchive,
-      color: '#f85149',
-      bg: 'rgba(248,81,73,0.1)',
-      link: '/archive',
-    },
+    { label: 'Codes Copied',   value: stats.totalCopies,  icon: faCopy,    color: '#58a6ff', bg: 'rgba(88,166,255,0.1)',  link: '/' },
+    { label: 'Codes Added',    value: stats.addedCodes,   icon: faPlus,    color: '#3fb950', bg: 'rgba(63,185,80,0.1)',   link: '/add-code' },
+    { label: 'Active Codes',   value: stats.activeCodes,  icon: faGift,    color: '#f9c513', bg: 'rgba(249,197,19,0.1)',  link: '/' },
+    { label: 'Archived Codes', value: stats.archivedCodes,icon: faArchive, color: '#f85149', bg: 'rgba(248,81,73,0.1)',   link: '/archive' },
   ];
 
   return (
@@ -112,9 +134,7 @@ const Dashboard = () => {
             <span className="title-accent-red">Your</span>{' '}
             <span className="title-accent-yellow">Dashboard</span>
           </h2>
-          <p className="page-subtitle">
-            Welcome back, <strong>{user?.name}</strong> 👋
-          </p>
+          <p className="page-subtitle">Welcome back, <strong>{user?.name}</strong> 👋</p>
         </div>
         <Link to="/add-code" className="btn btn-primary">
           <FontAwesomeIcon icon={faPlus} className="me-2" />Share a Code
@@ -135,9 +155,7 @@ const Dashboard = () => {
             {statCards.map(card => (
               <div className="col-6 col-lg-3" key={card.label}>
                 <Link to={card.link} className="stat-card" style={{ '--card-color': card.color, '--card-bg': card.bg }}>
-                  <div className="stat-card-icon">
-                    <FontAwesomeIcon icon={card.icon} />
-                  </div>
+                  <div className="stat-card-icon"><FontAwesomeIcon icon={card.icon} /></div>
                   <div className="stat-card-value">{card.value}</div>
                   <div className="stat-card-label">{card.label}</div>
                 </Link>
@@ -145,7 +163,7 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {/* Contribution Score + Level */}
+          {/* Level + Score */}
           <div className="row g-3 mb-4">
             <div className="col-md-6">
               <div className="dashboard-level-card">
@@ -153,8 +171,7 @@ const Dashboard = () => {
                   <div>
                     <div className="level-label">Contributor Level</div>
                     <div className="level-name" style={{ color: level.color }}>
-                      <FontAwesomeIcon icon={level.icon} className="me-2" />
-                      {level.label}
+                      <FontAwesomeIcon icon={level.icon} className="me-2" />{level.label}
                     </div>
                   </div>
                   <div className="score-pill" style={{ borderColor: level.color, color: level.color }}>
@@ -162,22 +179,14 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="level-progress-track">
-                  <div
-                    className="level-progress-fill"
-                    style={{ width: `${progressPct}%`, background: level.color }}
-                  />
+                  <div className="level-progress-fill" style={{ width: `${progressPct}%`, background: level.color }} />
                 </div>
                 <div className="level-progress-labels">
                   <span style={{ color: level.color }}>{level.label} ({level.min}+)</span>
-                  {nextLevel && (
-                    <span style={{ color: '#8b949e' }}>
-                      Next: {nextLevel.label} at {nextLevel.min} codes
-                    </span>
-                  )}
+                  {nextLevel && <span style={{ color: '#8b949e' }}>Next: {nextLevel.label} at {nextLevel.min} codes</span>}
                 </div>
               </div>
             </div>
-
             <div className="col-md-6">
               <div className="dashboard-score-card">
                 <FontAwesomeIcon icon={faChartBar} className="score-card-icon" />
@@ -193,93 +202,73 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Activity Feed */}
+          {/* Activity Feed — paginated */}
           <div className="row g-3">
-            {/* Recent Copies */}
             <div className="col-md-6">
-              <div className="activity-card">
-                <div className="activity-card-header">
-                  <FontAwesomeIcon icon={faCopy} className="me-2" style={{ color: '#58a6ff' }} />
-                  Codes You Recently Copied
-                </div>
-                {activityLoading ? (
-                  <div className="text-center py-3">
-                    <div className="spinner-border spinner-border-sm text-primary" role="status" />
-                  </div>
-                ) : activity.recentCopies.length === 0 ? (
-                  <div className="activity-empty">
-                    <FontAwesomeIcon icon={faCopy} className="me-2" />
-                    No copies yet. <Link to="/">Browse codes →</Link>
-                  </div>
-                ) : (
-                  <ul className="activity-list">
-                    {activity.recentCopies.map(c => (
-                      <li className="activity-item" key={c._id}>
-                        <div className="activity-item-left">
-                          <span className="activity-dot copy-dot" />
-                          <div>
-                            <div className="activity-title">
-                              {c.redeemCode?.title || 'Unknown Code'}
-                            </div>
-                            <div className="activity-sub">
-                              <FontAwesomeIcon icon={faUser} className="me-1" />
-                              by {c.redeemCode?.user?.name || '—'}
-                            </div>
-                          </div>
+              <ActivityList
+                items={activity.recentCopies}
+                loading={activityLoading}
+                headerIcon={faCopy}
+                headerLabel="Codes You Recently Copied"
+                accentColor="#58a6ff"
+                emptyIcon={faCopy}
+                emptyMsg="No copies yet."
+                emptyLink="/"
+                emptyLinkLabel="Browse codes →"
+                renderItem={c => (
+                  <li className="activity-item" key={c._id}>
+                    <div className="activity-item-left">
+                      <span className="activity-dot copy-dot" />
+                      <div>
+                        <div className="activity-title">{c.redeemCode?.title || 'Unknown Code'}</div>
+                        <div className="activity-sub">
+                          <FontAwesomeIcon icon={faUser} className="me-1" />
+                          by {c.redeemCode?.user?.name || '—'}
                         </div>
-                        <div className="activity-time">
-                          <FontAwesomeIcon icon={faClock} className="me-1" />
-                          {formatRelative(c.createdAt)}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                      </div>
+                    </div>
+                    <div className="activity-time">
+                      <FontAwesomeIcon icon={faClock} className="me-1" />
+                      {formatRelative(c.createdAt)}
+                    </div>
+                  </li>
                 )}
-              </div>
+              />
             </div>
 
-            {/* Codes Posted */}
             <div className="col-md-6">
-              <div className="activity-card">
-                <div className="activity-card-header">
-                  <FontAwesomeIcon icon={faHistory} className="me-2" style={{ color: '#3fb950' }} />
-                  Codes You Recently Shared
-                </div>
-                {activityLoading ? (
-                  <div className="text-center py-3">
-                    <div className="spinner-border spinner-border-sm text-primary" role="status" />
-                  </div>
-                ) : activity.recentCodes.length === 0 ? (
-                  <div className="activity-empty">
-                    <FontAwesomeIcon icon={faGift} className="me-2" />
-                    None yet. <Link to="/add-code">Add one →</Link>
-                  </div>
-                ) : (
-                  <ul className="activity-list">
-                    {activity.recentCodes.map(c => (
-                      <li className="activity-item" key={c._id}>
-                        <div className="activity-item-left">
-                          <span className={`activity-dot ${c.isArchived ? 'archive-dot' : 'share-dot'}`} />
-                          <div>
-                            <div className="activity-title">{c.title}</div>
-                            <div className="activity-sub">
-                              <FontAwesomeIcon icon={faCopy} className="me-1" />
-                              {c.copyCount} copies &nbsp;·&nbsp;
-                              <span style={{ color: c.isArchived ? '#f85149' : '#3fb950' }}>
-                                {c.isArchived ? 'Archived' : 'Active'}
-                              </span>
-                            </div>
-                          </div>
+              <ActivityList
+                items={activity.recentCodes}
+                loading={activityLoading}
+                headerIcon={faHistory}
+                headerLabel="Codes You Recently Shared"
+                accentColor="#3fb950"
+                emptyIcon={faGift}
+                emptyMsg="None yet."
+                emptyLink="/add-code"
+                emptyLinkLabel="Add one →"
+                renderItem={c => (
+                  <li className="activity-item" key={c._id}>
+                    <div className="activity-item-left">
+                      <span className={`activity-dot ${c.isArchived ? 'archive-dot' : 'share-dot'}`} />
+                      <div>
+                        <div className="activity-title">{c.title}</div>
+                        <div className="activity-sub">
+                          <FontAwesomeIcon icon={faCopy} className="me-1" />
+                          {c.copyCount} copies &nbsp;·&nbsp;
+                          <span style={{ color: c.isArchived ? '#f85149' : '#3fb950' }}>
+                            {c.isArchived ? 'Archived' : 'Active'}
+                          </span>
                         </div>
-                        <div className="activity-time">
-                          <FontAwesomeIcon icon={faClock} className="me-1" />
-                          {formatRelative(c.createdAt)}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                      </div>
+                    </div>
+                    <div className="activity-time">
+                      <FontAwesomeIcon icon={faClock} className="me-1" />
+                      {formatRelative(c.createdAt)}
+                    </div>
+                  </li>
                 )}
-              </div>
+              />
             </div>
           </div>
 
@@ -287,18 +276,10 @@ const Dashboard = () => {
           <div className="dashboard-quick-links mt-4">
             <div className="quick-links-label">Quick Actions</div>
             <div className="quick-links-row">
-              <Link to="/add-code" className="quick-link-btn">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />Add Code
-              </Link>
-              <Link to="/" className="quick-link-btn">
-                <FontAwesomeIcon icon={faGift} className="me-2" />Browse Feed
-              </Link>
-              <Link to="/archive" className="quick-link-btn">
-                <FontAwesomeIcon icon={faArchive} className="me-2" />Archive
-              </Link>
-              <Link to="/account" className="quick-link-btn">
-                <FontAwesomeIcon icon={faUser} className="me-2" />Profile
-              </Link>
+              <Link to="/add-code" className="quick-link-btn"><FontAwesomeIcon icon={faPlus} className="me-2" />Add Code</Link>
+              <Link to="/" className="quick-link-btn"><FontAwesomeIcon icon={faGift} className="me-2" />Browse Feed</Link>
+              <Link to="/archive" className="quick-link-btn"><FontAwesomeIcon icon={faArchive} className="me-2" />Archive</Link>
+              <Link to="/account" className="quick-link-btn"><FontAwesomeIcon icon={faUser} className="me-2" />Profile</Link>
             </div>
           </div>
         </>

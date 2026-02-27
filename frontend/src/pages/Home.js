@@ -3,30 +3,23 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import Layout from '../components/Layout';
 import CodeCard from '../components/CodeCard';
+import Pagination from '../components/Pagination';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch, faGift, faPlus, faTimes, faFilter
-} from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faGift, faPlus, faTimes, faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const CATEGORY_ICONS = {
-  'Food & Dining':        '🍔',
-  'Travel':               '✈️',
-  'Cosmetics & Beauty':   '💄',
-  'Electronics':          '📱',
-  'Fashion & Clothing':   '👗',
-  'Entertainment':        '🎬',
-  'Health & Fitness':     '💪',
-  'Shopping':             '🛍️',
-  'Gaming':               '🎮',
-  'Other':                '🎁',
+  'Food & Dining': '🍔', 'Travel': '✈️', 'Cosmetics & Beauty': '💄',
+  'Electronics': '📱', 'Fashion & Clothing': '👗', 'Entertainment': '🎬',
+  'Health & Fitness': '💪', 'Shopping': '🛍️', 'Gaming': '🎮', 'Other': '🎁',
 };
 
 const HARDCODED_CATEGORIES = [
   'Food & Dining','Travel','Cosmetics & Beauty','Electronics',
-  'Fashion & Clothing','Entertainment','Health & Fitness',
-  'Shopping','Gaming','Other',
+  'Fashion & Clothing','Entertainment','Health & Fitness','Shopping','Gaming','Other',
 ];
+
+const PAGE_SIZE = 12;
 
 const Home = () => {
   const [codes, setCodes] = useState([]);
@@ -34,9 +27,9 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    // Fetch codes — primary, must succeed
     const fetchCodes = async () => {
       try {
         const res = await api.get('/codes');
@@ -48,53 +41,44 @@ const Home = () => {
         setLoading(false);
       }
     };
-
-    // Fetch categories — optional, fall back to hardcoded list
     const fetchCategories = async () => {
       try {
         const res = await api.get('/codes/categories');
         setCategories(['All', ...res.data]);
       } catch {
-        // Backend might not have this endpoint yet (old deployment) — use fallback
         setCategories(['All', ...HARDCODED_CATEGORIES]);
       }
     };
-
     fetchCodes();
     fetchCategories();
   }, []);
 
   const handleCodeUpdate = (updatedCodeId) => {
-    setCodes(prevCodes =>
-      prevCodes.map(code =>
-        code._id === updatedCodeId ? { ...code, hasCopied: true } : code
-      )
-    );
+    setCodes(prev => prev.map(c => c._id === updatedCodeId ? { ...c, hasCopied: true } : c));
   };
 
-  // Client-side filter (fast UX, no extra API call)
+  // Client-side filter
   const filteredCodes = useMemo(() => {
     let result = codes;
-    if (activeCategory !== 'All') {
-      result = result.filter(c => c.category === activeCategory);
-    }
+    if (activeCategory !== 'All') result = result.filter(c => c.category === activeCategory);
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(
-        c =>
-          c.title.toLowerCase().includes(q) ||
-          (c.description && c.description.toLowerCase().includes(q)) ||
-          (c.category && c.category.toLowerCase().includes(q))
+      result = result.filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        (c.description && c.description.toLowerCase().includes(q)) ||
+        (c.category && c.category.toLowerCase().includes(q))
       );
     }
     return result;
   }, [codes, activeCategory, searchQuery]);
 
-  const clearFilters = () => {
-    setSearchQuery('');
-    setActiveCategory('All');
-  };
+  // Reset to page 1 whenever filters change
+  const totalPages = Math.ceil(filteredCodes.length / PAGE_SIZE);
+  const safePage = Math.min(currentPage, totalPages || 1);
+  const pagedCodes = filteredCodes.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
+  const handleFilterChange = (fn) => { fn(); setCurrentPage(1); };
+  const clearFilters = () => { setSearchQuery(''); setActiveCategory('All'); setCurrentPage(1); };
   const hasFilters = searchQuery.trim() || activeCategory !== 'All';
 
   return (
@@ -124,33 +108,27 @@ const Home = () => {
                 className="home-search-input"
                 placeholder="Search by title, description, or category…"
                 value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                onChange={e => handleFilterChange(() => setSearchQuery(e.target.value))}
                 id="home-search"
               />
               {searchQuery && (
-                <button
-                  className="home-search-clear"
-                  onClick={() => setSearchQuery('')}
-                  title="Clear search"
-                >
+                <button className="home-search-clear" onClick={() => handleFilterChange(() => setSearchQuery(''))} title="Clear search">
                   <FontAwesomeIcon icon={faTimes} />
                 </button>
               )}
             </div>
           </div>
 
-          {/* Category filter chips */}
+          {/* Category chips */}
           <div className="category-chips-wrapper">
             <div className="category-chips">
               {categories.map(cat => (
                 <button
                   key={cat}
                   className={`category-chip ${activeCategory === cat ? 'active' : ''}`}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => handleFilterChange(() => setActiveCategory(cat))}
                 >
-                  {cat !== 'All' && (
-                    <span className="chip-emoji">{CATEGORY_ICONS[cat] || '🎁'}</span>
-                  )}
+                  {cat !== 'All' && <span className="chip-emoji">{CATEGORY_ICONS[cat] || '🎁'}</span>}
                   {cat}
                 </button>
               ))}
@@ -175,26 +153,24 @@ const Home = () => {
           </div>
         ) : filteredCodes.length > 0 ? (
           <>
+            {/* Result info */}
             <div className="codes-result-info">
               <FontAwesomeIcon icon={faFilter} className="me-2" style={{ color: '#8b949e' }} />
               <span>
-                Showing <strong>{filteredCodes.length}</strong> of{' '}
-                <strong>{codes.length}</strong> codes
+                Showing{' '}
+                <strong>{(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filteredCodes.length)}</strong>
+                {' '}of <strong>{filteredCodes.length}</strong> codes
                 {activeCategory !== 'All' && (
-                  <span className="ms-1">
-                    in <span className="result-cat-badge">{activeCategory}</span>
-                  </span>
+                  <span className="ms-1">in <span className="result-cat-badge">{activeCategory}</span></span>
                 )}
-                {searchQuery && (
-                  <span className="ms-1">
-                    matching <em>"{searchQuery}"</em>
-                  </span>
-                )}
+                {searchQuery && <span className="ms-1">matching <em>"{searchQuery}"</em></span>}
               </span>
             </div>
+
+            {/* Grid */}
             <div className="codes-grid">
               <div className="row g-4">
-                {filteredCodes.map(code => (
+                {pagedCodes.map(code => (
                   <div className="col-md-6 col-lg-4" key={code._id}>
                     <div className="code-card">
                       <CodeCard code={code} onCopySuccess={handleCodeUpdate} />
@@ -202,6 +178,15 @@ const Home = () => {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Pagination */}
+            <div className="mt-4">
+              <Pagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                onPageChange={(p) => { setCurrentPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              />
             </div>
           </>
         ) : (

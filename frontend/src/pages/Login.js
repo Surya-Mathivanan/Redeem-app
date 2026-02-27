@@ -2,279 +2,148 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faEye, faEyeSlash, faGift, faEnvelope, faLock, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
+const FEATURES = [
+  { emoji: '🎁', text: 'Discover exclusive redeem codes shared by the community' },
+  { emoji: '⚡', text: 'Copy codes instantly and track your activity' },
+  { emoji: '🏆', text: 'Earn contribution points as you share and collect codes' },
+  { emoji: '🛡️', text: 'Safe, fast, and completely free to use' },
+];
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [focusedField, setFocusedField] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const { email, password } = formData;
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const togglePasswordVisibility = () => { // New function to toggle visibility
-    setShowPassword(!showPassword);
-  };
+  const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      // In a real app, you'd show an error message here
-      return;
-    }
-    
+    if (!formData.email || !formData.password) return;
     setIsLoading(true);
-    
     const success = await login(formData);
-    
     setIsLoading(false);
-    
-    if (success) {
-      navigate('/');
-    }
+    if (success) navigate('/');
   };
 
   return (
-    <div className="app-container">
-      <style>
-        {`
-                  .app-container {
-            background-color: rgb(9, 11, 44); /* Set the background color for the entire page */
-            min-height: 100vh; /* Ensure it covers the full viewport height */
-            display: flex; /* Use flexbox to help center content if needed */
-            justify-content: center;
-            align-items: center;
-          }
-          .form-container {
-            width: 100%; /* Make it responsive */
-            max-width: 400px; /* Add max-width to control the form's maximum width */
-            background: linear-gradient(#212121, #212121) padding-box,
-                        linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
-            border: 2px solid transparent;
-            padding: 32px 24px;
-            font-size: 14px;
-            font-family: inherit;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-sizing: border-box;
-            border-radius: 16px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin: auto; /* Center the form container horizontally */
-          }
+    <div className="login-page">
+      {/* Animated background blobs */}
+      <div className="login-blob login-blob-1" />
+      <div className="login-blob login-blob-2" />
+      <div className="login-blob login-blob-3" />
 
-          .form-container button:active {
-            scale: 0.95;
-          }
-
-          .form-container .form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-          }
-
-          .form-container .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            position: relative; /* Added for icon positioning */
-          }
-
-          .form-container .form-group-label {
-            display: block;
-            margin-bottom: 5px;
-            color: #717171;
-            font-weight: 600;
-            font-size: 12px;
-          }
-
-          .form-container .form-group-input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: #fff;
-            font-family: inherit;
-            background-color: transparent;
-            border: 1px solid #414141;
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            padding-right: 40px; /* Added space for the eye icon */
-          }
-
-          .form-container .form-group-input::placeholder {
-            opacity: 0.5;
-          }
-
-          .form-container .form-group-input:focus {
-            outline: none;
-            border-color: #e81cff;
-          }
-
-          .form-container .form-submit-btn {
-            display: flex;
-            align-items: center; /* Center content vertically */
-            justify-content: center;
-            font-family: inherit;
-            color: #fff; /* Changed to white for better contrast */
-            font-weight: 600;
-            width: 100%; /* Make button full width */
-            background: linear-gradient(145deg, #e81cff, #40c9ff); /* Gradient background for button */
-            border: none; /* No border for the gradient button */
-            padding: 12px 16px;
-            font-size: inherit;
-            gap: 8px;
-            margin-top: 8px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.3s ease; /* Smooth transition for hover effects */
-          }
-
-          .form-container .form-submit-btn:hover {
-            background: linear-gradient(145deg, #40c9ff, #e81cff); /* Invert gradient on hover */
-            box-shadow: 0 0 10px rgba(232, 28, 255, 0.5); /* Add glow effect on hover */
-          }
-
-          .text-centered {
-            text-align: center;
-          }
-
-          .margin-bottom-large {
-            margin-bottom: 24px;
-          }
-
-          .margin-end-small {
-            margin-right: 8px;
-          }
-
-          .margin-bottom-medium {
-            margin-bottom: 16px;
-          }
-
-          .width-full {
-            width: 100%;
-          }
-
-          .margin-top-medium {
-            margin-top: 16px;
-          }
-
-          .margin-top-large {
-            margin-top: 24px;
-          }
-
-          .text-muted-style {
-            color: #aaa;
-            font-size: 0.85em;
-          }
-
-          .alert-message {
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-          }
-
-          .alert-danger-style {
-            background-color: #ff4d4d;
-            color: white;
-            border: 1px solid #cc0000;
-          }
-
-          .app-row {
-            display: flex;
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
-            min-height: 100vh;
-            width: 100%;
-          }
-
-          .app-col {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-          }
-
-          .password-toggle-icon { /* New style for the eye icon */
-            position: absolute;
-            right: 15px;
-            top: 60%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #717171;
-          }
-        `}
-      </style>
-      <div className="app-row">
-        <div className="app-col">
-          <div className="form-container">
-            <h2 className="text-centered margin-bottom-large">
-              {/* <FontAwesomeIcon icon={faSignInAlt} className="margin-end-small" /> */}
-              Login Now🎁
-            </h2>
-            
-            <form onSubmit={onSubmit} className="form">
-              <div className="form-group margin-bottom-medium">
-                <label htmlFor="email" className="form-group-label">Email Address</label>
-                <input
-                  type="email"
-                  className="form-group-input"
-                  id="email"
-                  name="email"
-                  value={email}
-                  onChange={onChange}
-                  placeholder="Enter your email"
-                  required
-                />
+      <div className="login-layout">
+        {/* Left panel — branding */}
+        <div className="login-left">
+          <div className="login-brand">
+            <span className="login-brand-icon"><FontAwesomeIcon icon={faGift} /></span>
+            <span className="login-brand-name">RedeemHub</span>
+          </div>
+          <h2 className="login-tagline">
+            Your <span className="login-tag-accent">community</span> for<br />
+            exclusive redeem codes
+          </h2>
+          <div className="login-features">
+            {FEATURES.map((f, i) => (
+              <div className="login-feature-item" key={i}>
+                <span className="login-feature-emoji">{f.emoji}</span>
+                <span className="login-feature-text">{f.text}</span>
               </div>
-              
-              <div className="form-group margin-bottom-medium">
-                <label htmlFor="password" className="form-group-label">Password</label>
-                <input
-                  type={showPassword ? 'text' : 'password'} 
-                  className="form-group-input"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={onChange}
-                  placeholder="Enter your password"
-                  required
-                />
-                <FontAwesomeIcon 
-                  icon={showPassword ? faEyeSlash : faEye} // Dynamic icon
-                  className="password-toggle-icon"
-                  onClick={togglePasswordVisibility}
-                />
+            ))}
+          </div>
+        </div>
+
+        {/* Right panel — form */}
+        <div className="login-right">
+          <div className="login-card">
+            {/* Header */}
+            <div className="login-card-header">
+              <h1 className="login-title">Welcome back 👋</h1>
+              <p className="login-subtitle">Sign in to access your redeem codes</p>
+            </div>
+
+            <form onSubmit={onSubmit} className="login-form">
+              {/* Email */}
+              <div className={`login-field ${focusedField === 'email' ? 'focused' : ''} ${formData.email ? 'filled' : ''}`}>
+                <label className="login-field-label" htmlFor="login-email">Email Address</label>
+                <div className="login-field-wrapper">
+                  <FontAwesomeIcon icon={faEnvelope} className="login-field-icon" />
+                  <input
+                    type="email"
+                    id="login-email"
+                    name="email"
+                    className="login-input"
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={onChange}
+                    onFocus={() => setFocusedField('email')}
+                    onBlur={() => setFocusedField('')}
+                    required
+                    autoComplete="email"
+                  />
+                </div>
               </div>
-              
+
+              {/* Password */}
+              <div className={`login-field ${focusedField === 'password' ? 'focused' : ''} ${formData.password ? 'filled' : ''}`}>
+                <label className="login-field-label" htmlFor="login-password">Password</label>
+                <div className="login-field-wrapper">
+                  <FontAwesomeIcon icon={faLock} className="login-field-icon" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="login-password"
+                    name="password"
+                    className="login-input"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={onChange}
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField('')}
+                    required
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    className="login-eye-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit */}
               <button
                 type="submit"
-                className="form-submit-btn width-full margin-top-medium"
-                disabled={isLoading}
+                id="login-submit"
+                className="login-submit-btn"
+                disabled={isLoading || !formData.email || !formData.password}
               >
                 {isLoading ? (
                   <>
-                    <FontAwesomeIcon icon={faSpinner} spin className="margin-end-small" />
-                    Logging in...
+                    <FontAwesomeIcon icon={faSpinner} spin className="me-2" />
+                    Signing in…
                   </>
                 ) : (
-                  'Login'
+                  <>
+                    Sign In
+                    <FontAwesomeIcon icon={faArrowRight} className="ms-2" />
+                  </>
                 )}
               </button>
             </form>
-            
-            <div className="margin-top-large text-centered">
+
+            {/* Footer */}
+            <div className="login-footer">
               <p>
-                Don't have an account? <Link to="/register" style={{ color: '#40c9ff', textDecoration: 'none' }}>Register</Link>
+                Don't have an account?{' '}
+                <Link to="/register" className="login-link">Create one free →</Link>
               </p>
             </div>
           </div>

@@ -2349,3 +2349,525 @@ a:hover {
 .success-title { font-size: 2rem; font-weight: 700; color: #3fb950; margin-bottom: 0.75rem; }
 .success-sub { color: #8b949e; max-width: 420px; margin-bottom: 2rem; line-height: 1.6; }
 .success-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+/* ─────────────────────────────────────────────────────────────
+   PAGINATION — Full numbered (Home page)
+───────────────────────────────────────────────────────────── */
+.pagination-wrapper {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.5rem; flex-wrap: wrap; padding: 1rem 0 0.5rem;
+}
+.page-btn {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.45rem 1rem; border-radius: 8px;
+  background: #1a1a1a; border: 1px solid #2d2d2d;
+  color: #8b949e; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+}
+.page-btn:hover:not(:disabled) { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,0.08); }
+.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.page-numbers { display: flex; align-items: center; gap: 0.3rem; }
+.page-num {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: #1a1a1a; border: 1px solid #2d2d2d;
+  color: #8b949e; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.page-num:hover { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,0.08); }
+.page-num.active { background: #58a6ff; border-color: #58a6ff; color: #0d1117; font-weight: 700; cursor: default; }
+.page-ellipsis { color: #4d4d4d; padding: 0 0.2rem; font-size: 0.9rem; }
+
+/* Compact pagination (activity lists) */
+.pagination-compact {
+  display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 0.5rem 0;
+}
+.page-btn-compact {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: #1a1a1a; border: 1px solid #2d2d2d;
+  color: #8b949e; font-size: 0.75rem; cursor: pointer;
+  transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+}
+.page-btn-compact:hover:not(:disabled) { border-color: #58a6ff; color: #58a6ff; }
+.page-btn-compact:disabled { opacity: 0.3; cursor: not-allowed; }
+.page-info-compact { font-size: 0.78rem; color: #8b949e; }
+
+.activity-pagination {
+  border-top: 1px solid #0f0f0f; padding: 0.5rem 1rem; background: rgba(0,0,0,0.15);
+}
+.activity-count-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(255,255,255,0.06); color: #8b949e;
+  border-radius: 999px; padding: 0.1rem 0.55rem;
+  font-size: 0.72rem; font-weight: 500; margin-left: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LOGIN PAGE — Premium split layout
+───────────────────────────────────────────────────────────── */
+.login-page {
+  min-height: 100vh; background: #0d1117;
+  display: flex; align-items: stretch; overflow: hidden; position: relative;
+}
+.login-blob {
+  position: fixed; border-radius: 50%; filter: blur(80px);
+  opacity: 0.22; pointer-events: none;
+  animation: blobFloat 8s ease-in-out infinite;
+}
+.login-blob-1 { width: 400px; height: 400px; background: #58a6ff; top: -120px; left: -120px; animation-delay: 0s; }
+.login-blob-2 { width: 320px; height: 320px; background: #f9c513; bottom: -80px; right: 30%; animation-delay: 2.5s; }
+.login-blob-3 { width: 260px; height: 260px; background: #f85149; top: 40%; right: -80px; animation-delay: 5s; }
+@keyframes blobFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+.login-layout { display: flex; width: 100%; min-height: 100vh; position: relative; z-index: 1; }
+
+/* Left branding panel */
+.login-left {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: 3rem 3.5rem;
+  background: linear-gradient(135deg, rgba(88,166,255,0.07) 0%, rgba(249,197,19,0.04) 100%);
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+@media (max-width: 768px) { .login-left { display: none; } }
+
+.login-brand { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; }
+.login-brand-icon {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, #58a6ff, #f9c513);
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: #0d1117; flex-shrink: 0;
+}
+.login-brand-name {
+  font-size: 1.5rem; font-weight: 800;
+  background: linear-gradient(135deg, #58a6ff, #f9c513);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.login-tagline { font-size: 2rem; font-weight: 700; color: #f0f6fc; line-height: 1.3; margin-bottom: 2rem; }
+.login-tag-accent {
+  background: linear-gradient(135deg, #58a6ff, #a5a5ff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.login-features { display: flex; flex-direction: column; gap: 0.85rem; }
+.login-feature-item {
+  display: flex; align-items: flex-start; gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; transition: background 0.2s;
+}
+.login-feature-item:hover { background: rgba(88,166,255,0.06); }
+.login-feature-emoji { font-size: 1.2rem; line-height: 1; flex-shrink: 0; margin-top: 0.05rem; }
+.login-feature-text { font-size: 0.875rem; color: #8b949e; line-height: 1.4; }
+
+/* Right form panel */
+.login-right {
+  width: 440px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem; background: rgba(0,0,0,0.25);
+}
+@media (max-width: 768px) { .login-right { width: 100%; background: transparent; padding: 1.5rem; } }
+
+.login-card {
+  width: 100%; max-width: 380px;
+  background: rgba(22,27,34,0.92);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: slideUp 0.45s ease-out;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.login-card-header { margin-bottom: 2rem; }
+.login-title { font-size: 1.6rem; font-weight: 800; color: #f0f6fc; margin: 0 0 0.35rem; }
+.login-subtitle { font-size: 0.875rem; color: #8b949e; margin: 0; }
+.login-form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.login-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.login-field-label { font-size: 0.82rem; font-weight: 600; color: #8b949e; transition: color 0.2s; }
+.login-field.focused .login-field-label { color: #58a6ff; }
+.login-field-wrapper { position: relative; display: flex; align-items: center; }
+.login-field-icon {
+  position: absolute; left: 0.9rem; color: #4d4d4d;
+  font-size: 0.85rem; transition: color 0.2s; pointer-events: none;
+}
+.login-field.focused .login-field-icon { color: #58a6ff; }
+
+.login-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #2d2d2d; border-radius: 10px;
+  color: #f0f6fc; padding: 0.75rem 2.8rem 0.75rem 2.5rem;
+  font-size: 0.9rem; font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; outline: none;
+}
+.login-input::placeholder { color: #333; }
+.login-field.focused .login-input {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88,166,255,0.12);
+  background: rgba(88,166,255,0.04);
+}
+.login-field.filled .login-input:not(:focus) { border-color: rgba(88,166,255,0.3); }
+
+.login-eye-btn {
+  position: absolute; right: 0.9rem;
+  background: none; border: none; color: #4d4d4d;
+  cursor: pointer; font-size: 0.9rem; transition: color 0.2s; padding: 0; line-height: 1;
+}
+.login-eye-btn:hover { color: #8b949e; }
+
+.login-submit-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: linear-gradient(135deg, #58a6ff, #a5a5ff);
+  border: none; border-radius: 10px;
+  color: #0d1117; font-weight: 700; font-size: 0.95rem;
+  padding: 0.85rem; cursor: pointer; margin-top: 0.5rem;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s; font-family: inherit;
+}
+.login-submit-btn:hover:not(:disabled) {
+  opacity: 0.9; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(88,166,255,0.35);
+}
+.login-submit-btn:active:not(:disabled) { transform: translateY(0); }
+.login-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.login-footer { margin-top: 1.75rem; text-align: center; font-size: 0.85rem; color: #8b949e; }
+.login-footer p { margin: 0; }
+.login-link { color: #58a6ff; font-weight: 600; text-decoration: none; transition: color 0.2s; }
+.login-link:hover { color: #a5a5ff; text-decoration: underline; }
+
+/* ─────────────────────────────────────────────────────────────
+   REGISTER PAGE additions (reuses all .login-* styles)
+───────────────────────────────────────────────────────────── */
+.register-error-banner {
+  background: rgba(248,81,73,0.12);
+  border: 1px solid rgba(248,81,73,0.35);
+  border-radius: 10px;
+  color: #f85149;
+  font-size: 0.85rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.75rem;
+  animation: slideUp 0.3s ease-out;
+}
+
+.register-field-hint {
+  font-size: 0.76rem;
+  margin-top: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.register-field-hint.success { color: #3fb950; }
+.register-field-hint.error   { color: #f85149; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS — comprehensive pass
+   All rules at ≤768px (tablet+phone) and ≤480px (phone only)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Global page header & titles ─────────────────────────── */
+@media (max-width: 768px) {
+  .page-header { margin-bottom: 1rem; }
+  .page-title  { font-size: 1.6rem !important; }
+  .page-subtitle { font-size: 0.85rem; }
+
+  /* Header flex row: stack Add-New-Code button below title */
+  .page-header .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
+  .page-header .btn { width: 100%; justify-content: center; }
+}
+
+/* ── 2. Home — search bar & category chips ───────────────────── */
+@media (max-width: 768px) {
+  .home-search-bar { margin-bottom: 0.75rem; }
+  .home-search-input { font-size: 0.9rem; padding: 0.65rem 2.5rem 0.65rem 2.4rem; }
+
+  /* Chips: outer wrapper stays flex-row but category-chips inner scrolls */
+  .category-chips-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    overflow: visible;
+  }
+  .category-chips {
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+  .category-chips::-webkit-scrollbar { display: none; }
+  .category-chip {
+    white-space: nowrap;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+  .btn-clear-filters { flex-shrink: 0; font-size: 0.78rem; }
+
+  /* Result info */
+  .codes-result-info { font-size: 0.82rem; }
+}
+
+/* ── 3. Home — code grid: 2 columns on phone ─────────────────── */
+@media (max-width: 576px) {
+  .codes-grid .col-md-6,
+  .codes-grid .col-lg-4 {
+    width: 50% !important;
+    max-width: 50% !important;
+    padding-left: 0.35rem !important;
+    padding-right: 0.35rem !important;
+  }
+  /* Tighten the card padding so content fits in the narrower card */
+  .codes-grid .code-card { padding: 0.65rem !important; }
+  .codes-grid .code-title { font-size: 0.88rem !important; }
+  .codes-grid .copy-badge { padding: 0.2rem 0.6rem !important; font-size: 0.76rem !important; }
+  .codes-grid .code-description-text { font-size: 0.75rem !important; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+}
+
+/* ── 4. Dashboard ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Greeting row: stack button */
+  .dashboard-greeting {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .dashboard-greeting .btn { width: 100%; justify-content: center; }
+
+  /* Stat cards: 2×2 grid */
+  .stat-card { padding: 1rem 0.75rem; }
+  .stat-card-value { font-size: 1.75rem; }
+  .stat-card-label { font-size: 0.72rem; }
+
+  /* Level & score cards: stack */
+  .dashboard-level-card,
+  .dashboard-score-card {
+    padding: 1rem;
+  }
+  .level-name { font-size: 1.1rem; }
+
+  /* Activity cards: full width (Bootstrap col-md-6 already handles this,
+     but we tighten the list items) */
+  .activity-item { padding: 0.6rem 1rem; gap: 0.5rem; }
+  .activity-title { font-size: 0.85rem; }
+  .activity-sub   { font-size: 0.72rem; }
+  .activity-time  { font-size: 0.72rem; white-space: nowrap; }
+
+  /* Quick actions: 2-col wrap */
+  .quick-links-row { flex-wrap: wrap; gap: 0.5rem; }
+  .quick-link-btn  { flex: 1 1 calc(50% - 0.5rem); justify-content: center; font-size: 0.82rem; }
+}
+
+/* ── 5. Account tabs ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hero section: tighten */
+  .account-hero { padding: 1.25rem 1rem; flex-direction: column; text-align: center; gap: 0.75rem; }
+  .account-avatar { width: 60px; height: 60px; font-size: 1.4rem; }
+  .account-name   { font-size: 1.1rem; }
+
+  /* Tab buttons: scrollable row */
+  .account-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    border-radius: 10px;
+    padding: 4px;
+  }
+  .account-tabs::-webkit-scrollbar { display: none; }
+  .account-tab {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.85rem;
+  }
+
+  /* Profile & security forms */
+  .account-section { padding: 1rem; }
+  .security-info-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; font-size: 0.82rem; }
+}
+
+/* ── 6. Add Code page ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Two-column layout: make preview card go below form */
+  .add-code-layout { flex-direction: column !important; gap: 1.5rem; }
+  .add-code-form-col,
+  .add-code-preview-col { width: 100% !important; max-width: 100% !important; }
+
+  /* Category selector grid: 2 columns → fill easier on mobile */
+  .category-selector-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.4rem; }
+  .category-option { padding: 0.55rem 0.4rem; font-size: 0.78rem; }
+  .category-option-emoji { font-size: 1.3rem; }
+
+  /* Tip card */
+  .tip-card { padding: 0.85rem 1rem; font-size: 0.82rem; }
+}
+
+/* ── 7. Archive page ─────────────────────────────────────────── */
+@media (max-width: 576px) {
+  /* Cards: full width */
+  .archive-grid .col-md-6,
+  .archive-grid .col-lg-4 { width: 100% !important; max-width: 100% !important; }
+
+  /* Archive card actions: stack buttons full-width on phone */
+  .archive-card-actions { flex-direction: column; gap: 0.5rem; }
+  .archive-card-actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ── 8. Pagination ───────────────────────────────────────────── */
+@media (max-width: 480px) {
+  /* Full pagination: hide page numbers, show only prev/next + current info */
+  .page-numbers { display: none; }
+  .pagination-wrapper::before {
+    content: attr(data-info);
+    font-size: 0.8rem;
+    color: #8b949e;
+  }
+  /* Compact stays fine — it's already minimal */
+  .pagination-compact { gap: 0.5rem; }
+  .page-info-compact { font-size: 0.72rem; }
+}
+
+@media (max-width: 600px) {
+  /* On small phones keep page numbers but remove ellipsis items */
+  .page-ellipsis { display: none; }
+  .page-num { width: 32px; height: 32px; font-size: 0.8rem; }
+  .page-btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+}
+
+/* ── 9. Mobile header height fix (ensure content never hides under it) ── */
+@media (max-width: 768px) {
+  .main-content { padding-top: 64px !important; }
+  .content-wrapper { padding: 0.85rem !important; }
+}
+
+/* ── 10. General utility fixes on small screens ─────────────── */
+@media (max-width: 480px) {
+  .page-title { font-size: 1.35rem !important; }
+  .content-wrapper { padding: 0.65rem !important; }
+  .stat-card-value { font-size: 1.5rem; }
+
+  /* Prevent any fixed-width element from causing horizontal scroll */
+  img, table, pre, iframe { max-width: 100%; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HOME PAGE — Targeted mobile fixes (from screenshot review)
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Prevent the whole page from scrolling horizontally ───── */
+  body, .app-container, .main-content, .content-wrapper, .home-container {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  /* ── Category chips — force horizontal scroll, never overflow ── */
+  .category-chips-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    overflow: visible !important;
+  }
+  .category-chips {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0.4rem !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding-bottom: 2px;
+  }
+  .category-chips::-webkit-scrollbar { display: none; }
+  .category-chip {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+  .btn-clear-filters {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── Search bar — never wider than viewport ─────────────────── */
+  .home-search-bar { width: 100%; }
+  .home-search-input-wrapper { width: 100%; }
+  .home-search-input { width: 100%; box-sizing: border-box; }
+
+  /* ── Code card header — prevent title+badge overflow ────────── */
+  .code-card-header {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .code-card-header > .d-flex {
+    flex: 1;
+    min-width: 0;
+  }
+  .code-title {
+    font-size: 1rem !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── Code display box — centre the overlay text properly ────── */
+  .code-display {
+    min-height: 52px !important;
+    font-size: 0.8rem !important;
+    padding: 0.75rem !important;
+    justify-content: flex-start;
+  }
+  .code-overlay {
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .overlay-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+  }
+  .overlay-icon {
+    font-size: 1rem !important;
+    margin-bottom: 0 !important;
+    opacity: 0.8;
+  }
+
+  /* ── Code meta row — wrap on very small screens ─────────────── */
+  .code-meta {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.78rem !important;
+  }
+
+  /* ── Copy button — full width on mobile ─────────────────────── */
+  .copy-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.65rem !important;
+    font-size: 0.88rem !important;
+  }
+
+  /* ── Result info strip ─────────────────────────────────────── */
+  .codes-result-info {
+    font-size: 0.78rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+}

@@ -1,11 +1,15 @@
 import axios from "axios";
 
-// Priority: REACT_APP_API_URL env var → production Render URL → local dev
-const baseURL =
-  process.env.REACT_APP_API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://redeem-appp.onrender.com/api"
-    : "http://localhost:5000/api");
+// Ensure the base URL always ends with /api regardless of how the env var is set
+const getRawBase = () => {
+  if (process.env.REACT_APP_API_URL) return process.env.REACT_APP_API_URL;
+  if (process.env.NODE_ENV === "production") return "https://redeem-appp.onrender.com/api";
+  return "http://localhost:5000/api";
+};
+
+// Auto-correct: if env var is set to the domain without /api, append it
+const rawBase = getRawBase().replace(/\/$/, ""); // strip trailing slash
+const baseURL = rawBase.endsWith("/api") ? rawBase : `${rawBase}/api`;
 
 if (process.env.NODE_ENV === "development") {
   console.log("[API] baseURL:", baseURL);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignInAlt, faSpinner, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; // Added faEye, faEyeSlash
+import { faSpinner, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const Login = () => {
   const [formData, setFormData] = useState({

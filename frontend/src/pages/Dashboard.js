@@ -7,7 +7,7 @@ import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCopy, faPlus, faArchive, faGift, faChartBar, faTrophy,
-  faFire, faHistory, faUser, faClock, faExternalLinkAlt, faStar
+  faFire, faHistory, faUser, faClock, faStar
 } from '@fortawesome/free-solid-svg-icons';
 
 const CONTRIBUTION_LEVELS = [

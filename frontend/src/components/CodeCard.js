@@ -4,7 +4,6 @@ import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
-  faCalendar,
   faCopy,
   faCheck,
   faEyeSlash,
